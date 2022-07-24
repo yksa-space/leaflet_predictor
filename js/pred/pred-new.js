@@ -76,7 +76,7 @@ function tawhiriRequest(settings){
     // Settings must be as per the API docs above.
     $.get( tawhiri_api, settings )
         .done(function( data ) {
-            processTawhiriResults(data);
+            processTawhiriResults(data, settings);
         })
         .fail(function(data) {
             throwError("Prediction failed.");
@@ -88,7 +88,7 @@ function tawhiriRequest(settings){
         });
 }
 
-function processTawhiriResults(data){
+function processTawhiriResults(data, settings){
     // Process results from a Tawhiri run.
 
     if(data.hasOwnProperty('error')){
@@ -100,7 +100,7 @@ function processTawhiriResults(data){
 
         plotStandardPrediction(prediction_results);
 
-        writePredictionInfo(0, data.metadata, data.request);
+        writePredictionInfo(settings, data.metadata, data.request);
         
     }
 
@@ -275,11 +275,17 @@ function plotStandardPrediction(prediction){
 
 // Populate and enable the download CSV, KML and Pan To links, and write the 
 // time the prediction was run and the model used to the Scenario Info window
-function writePredictionInfo(current_uuid, metadata, request) {
+function writePredictionInfo(settings, metadata, request) {
     // populate the download links
-    // TODO: Fix this.
-    $("#dlcsv").attr("href", "preds/"+current_uuid+"/flight_path.csv");
-    $("#dlkml").attr("href", "kml.php?uuid="+current_uuid);
+
+    // Create the API URLs based on the current prediction settings
+    _base_url = tawhiri_api + "?" + $.param(settings) 
+    _csv_url = _base_url + "&format=csv";
+    _kml_url = _base_url + "&format=kml";
+
+
+    $("#dlcsv").attr("href", _csv_url);
+    $("#dlkml").attr("href", _kml_url);
     $("#panto").click(function() {
             map.panTo(map_items['launch_marker'].getLatLng());
             //map.setZoom(7);
