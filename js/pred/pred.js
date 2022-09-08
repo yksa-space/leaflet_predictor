@@ -31,12 +31,68 @@ $(document).ready(function() {
     // Check if an old prediction is to be displayed, and process if so
     //displayOld();
 
+    // Read in URL parameters if provided, and run a prediction again.
+    var params_provided = readURLParams();
+
     // Plot the initial launch location
     plotClick();
 
     // Initialise the burst calculator
     calc_init();
+
+    // Run the prediction if it is provided in the URL.
+    if(params_provided) {
+        runPrediction();
+    }
 });
+
+
+function readURLParams() {
+    // Get current URL
+    url = new URL(window.location.href);
+
+    var params_provided = false;
+
+    if(url.searchParams.has('launch_latitude')){
+        $("#lat").val(url.searchParams.get('launch_latitude'));
+    }
+    if(url.searchParams.has('launch_longitude')){
+        $("#lon").val(url.searchParams.get('launch_longitude'));
+    }
+    if(url.searchParams.has('launch_altitude')){
+        $("#initial_alt").val(url.searchParams.get('launch_altitude'));
+    }
+    if(url.searchParams.has('ascent_rate')){
+        $("#ascent_rate").val(url.searchParams.get('ascent_rate'));
+    }
+    if(url.searchParams.has('descent_rate')){
+        $("#drag").val(url.searchParams.get('descent_rate'));
+    }
+    if(url.searchParams.has('profile')){
+        $("#flight_profile").val(url.searchParams.get('profile'));
+    }
+    if(url.searchParams.has('burst_altitude')){
+        $("#burst").val(url.searchParams.get('burst_altitude'));
+    }
+    if(url.searchParams.has('float_altitude')){
+        $("#burst").val(url.searchParams.get('float_altitude'));
+    }
+
+    if(url.searchParams.has('launch_datetime')){
+        var launch_datetime = url.searchParams.get('launch_datetime');
+        launch_moment = moment.utc(launch_datetime);
+
+        $("#min").val(launch_moment.minutes());
+        $("#hour").val(launch_moment.hours());
+        $("#day").val(launch_moment.date());
+        $("#month").val(launch_moment.month()+1);
+        $("#year").val(launch_moment.year());
+
+        params_provided = true;
+    }
+
+    return params_provided;
+}
 
 // See if an old UUID was supplied in the hashstring
 // If it was, extract it, then populate the launch card with its parameters

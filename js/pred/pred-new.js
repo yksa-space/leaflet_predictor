@@ -11,15 +11,24 @@
 function initLaunchCard(){
     // Initialise the time/date on the launch card.
 
-    var today = new Date();
+    // var today = new Date();
 
-    $('#year').val(today.getFullYear());
-    $('#day').val(today.getDate());
-    var month = today.getMonth()+1;
+    // $('#year').val(today.getFullYear());
+    // $('#day').val(today.getDate());
+    // var month = today.getMonth()+1;
+    // $("#month").val(month).change();
+    // $('#hour').val(today.getHours());
+    // $('#min').val(today.getMinutes());
+    // $('#sec').val(today.getSeconds());
+
+    var today = moment.utc();
+
+    $('#year').val(today.year());
+    $('#day').val(today.date());
+    var month = today.month()+1;
     $("#month").val(month).change();
-    $('#hour').val(today.getHours());
-    $('#min').val(today.getMinutes());
-    $('#sec').val(today.getSeconds());
+    $('#hour').val(today.hours());
+    $('#min').val(today.minutes());
 }
 
 
@@ -38,6 +47,16 @@ function runPrediction(){
     // Months are zero-indexed in Javascript. Wat.
     var launch_time = moment.utc([year, month-1, day, hour, minute, 0, 0]);
     run_settings.launch_datetime = launch_time.format();
+
+    // Sanity check the launch date to see if it's not too far into the past or future.
+    if(launch_time < (moment.utc().subtract(12, 'hours'))){
+        throwError("Launch time too old (outside of model time range).");
+        return;
+    }
+    if(launch_time > (moment.utc().add(7, 'days'))){
+        throwError("Launch time too far into the future (outside of model time range).");
+        return;
+    }
 
     // Grab other launch settings.
     run_settings.launch_latitude = parseFloat($('#lat').val());
@@ -60,6 +79,31 @@ function runPrediction(){
 
     console.log(run_settings);
 
+    // Update the URL with the supplied parameters.
+    url = new URL(window.location.href);
+    // Should probably clear all these parameters before setting them again?
+    url.searchParams.set('launch_datetime', run_settings.launch_datetime);
+    url.searchParams.set('launch_latitude', run_settings.launch_latitude);
+    url.searchParams.set('launch_longitude', run_settings.launch_longitude);
+    url.searchParams.set('launch_altitude', run_settings.launch_altitude);
+    url.searchParams.set('ascent_rate', run_settings.ascent_rate);
+    url.searchParams.set('profile', run_settings.profile);
+    if (run_settings.profile == "standard_profile"){
+        url.searchParams.set('burst_altitude', run_settings.burst_altitude);
+        url.searchParams.set('descent_rate', run_settings.descent_rate);
+    } else {
+        url.searchParams.set('float_altitude', run_settings.float_altitude);
+    }
+
+    console.log(url.href);
+    // Update browser URL.
+    history.replaceState(
+        {},
+        'Predictor v3.1',
+        url.href
+    );
+
+
     // Run the request
     tawhiriRequest(run_settings);
 
@@ -79,8 +123,13 @@ function tawhiriRequest(settings){
             processTawhiriResults(data, settings);
         })
         .fail(function(data) {
-            throwError("Prediction failed.");
-            //console.log(data);
+            var prediction_error = "Prediction failed. ";
+            if(data.hasOwnProperty("responseJSON"))
+            {
+                prediction_error += data.responseJSON.error.description;
+            }
+
+            throwError(prediction_error);
         })
         .always(function(data) {
             //throwError("test.");
