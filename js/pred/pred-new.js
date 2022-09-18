@@ -180,8 +180,6 @@ function tawhiriRequest(settings, extra_settings){
             // Copy our current settings for passing into the requst.
             var current_settings = {...hourly_predictions[current_hour]['settings']};
 
-            console.log(current_settings);
-
             $.get( {url:tawhiri_api, 
                 data: current_settings, 
                 current_hour: current_hour} )
@@ -443,7 +441,7 @@ function processHourlyTawhiriResults(data, settings, current_hour){
         // Now plot...
         plotMultiplePrediction(prediction_results, current_hour);
 
-        //writePredictionInfo(settings, data.metadata, data.request);
+        writeHourlyPredictionInfo(settings, data.metadata, data.request);
         
     }
 
@@ -457,16 +455,6 @@ function plotMultiplePrediction(prediction, current_hour){
     var landing = prediction.landing;
     var burst = prediction.burst;
 
-    // // Calculate range and time of flight
-    // var range = distHaversine(launch.latlng, landing.latlng, 1);
-    // var flighttime = "";
-    // var f_hours = Math.floor((prediction.flight_time % 86400) / 3600);
-    // var f_minutes = Math.floor(((prediction.flight_time % 86400) % 3600) / 60);
-    // if ( f_minutes < 10 ) f_minutes = "0"+f_minutes;
-    // flighttime = f_hours + "hr" + f_minutes;
-    // $("#cursor_pred_range").html(range);
-    // $("#cursor_pred_time").html(flighttime);
-    // cursorPredShow();
 
     // Make some nice icons
     var launch_icon = L.icon({
@@ -475,19 +463,6 @@ function plotMultiplePrediction(prediction, current_hour){
         iconAnchor: [5,5]
     });
 
-    // var land_icon = L.icon({
-    //     iconUrl: land_img,
-    //     iconSize: [10,10],
-    //     iconAnchor: [5,5]
-    // });
-
-    // var burst_icon = L.icon({
-    //     iconUrl: burst_img,
-    //     iconSize: [16,16],
-    //     iconAnchor: [8,8]
-    // });
-
-   // 
 
     if(!map_items.hasOwnProperty("launch_marker")){
         var launch_marker = L.marker(
@@ -550,6 +525,8 @@ function plotMultiplePrediction(prediction, current_hour){
 
         map.fitBounds(hourly_polyline.getBounds());
         map.setZoom(8);
+
+        $("#cursor_pred_lastrun").show();
 
     }
 
@@ -632,4 +609,28 @@ function showHideHourlyPrediction(e){
         hourly_predictions[current_hour]['layers']['flight_path'] = path_polyline;
     }
 
+}
+
+function writeHourlyPredictionInfo(settings, metadata, request) {
+    // populate the download links
+
+    // // Create the API URLs based on the current prediction settings
+    // _base_url = tawhiri_api + "?" + $.param(settings) 
+    // _csv_url = _base_url + "&format=csv";
+    // _kml_url = _base_url + "&format=kml";
+
+
+    // $("#dlcsv").attr("href", _csv_url);
+    // $("#dlkml").attr("href", _kml_url);
+    // $("#panto").click(function() {
+    //         map.panTo(map_items['launch_marker'].getLatLng());
+    //         //map.setZoom(7);
+    // });
+
+    var run_time = moment.utc(metadata.complete_datetime).format();
+    var dataset = moment.utc(request.dataset).format("YYYYMMDD-HH");
+
+
+    $("#run_time").html(run_time);
+    $("#dataset").html(dataset);
 }

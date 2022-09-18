@@ -74,6 +74,8 @@ function cursorPredHide() {
     cursorPredHideHandle = setTimeout(function () {
         cursorPredHideHandle = null;
         $("#cursor_pred").hide();
+        $("#cursor_pred_lastrun").hide();
+        $("#cursor_pred_links").hide();
     }, firstAjaxDelay + showStatusDelay);
 }
 
@@ -83,6 +85,8 @@ function cursorPredShow() {
         cursorPredHideHandle = null;
     }
     $("#cursor_pred").show();
+    $("#cursor_pred_lastrun").show();
+    $("#cursor_pred_links").show();
 }
 
 // Append a line to the debug window and scroll the window to the bottom
