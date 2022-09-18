@@ -192,7 +192,10 @@ function tawhiriRequest(settings, extra_settings){
                     {
                         prediction_error += data.responseJSON.error.description;
                     }
-                    console.log(prediction_error);
+
+                    // Silently handle failed predictions, which are most likely
+                    // because the prediction time was too far into the future.
+                    delete hourly_predictions[this.current_hour]
                     //throwError(prediction_error);
                 })
                 .always(function(data) {
