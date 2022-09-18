@@ -19,6 +19,7 @@ var current_uuid = '0';
 var map;
 var kmlLayer = null;
 var map_items = [];
+var time_was_now = false;
 var hourly_predictions = {};
 var hourly_mode = false;
 var hourly_polyline = null;

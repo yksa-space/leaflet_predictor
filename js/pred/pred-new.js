@@ -83,7 +83,11 @@ function runPrediction(){
     // Update the URL with the supplied parameters.
     url = new URL(window.location.href);
     // Should probably clear all these parameters before setting them again?
-    url.searchParams.set('launch_datetime', run_settings.launch_datetime);
+    if (time_was_now){
+        url.searchParams.set('launch_datetime','now');
+    }else {
+        url.searchParams.set('launch_datetime', run_settings.launch_datetime);
+    }
     url.searchParams.set('launch_latitude', run_settings.launch_latitude);
     url.searchParams.set('launch_longitude', run_settings.launch_longitude);
     url.searchParams.set('launch_altitude', run_settings.launch_altitude);

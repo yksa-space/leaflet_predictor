@@ -83,7 +83,13 @@ function readURLParams() {
 
     if(url.searchParams.has('launch_datetime')){
         var launch_datetime = url.searchParams.get('launch_datetime');
-        launch_moment = moment.utc(launch_datetime);
+
+        if(launch_datetime == "now"){
+            launch_moment = moment.utc();
+            time_was_now = true;
+        } else {
+            launch_moment = moment.utc(launch_datetime);
+        }
 
         $("#min").val(launch_moment.minutes());
         $("#hour").val(launch_moment.hours());
