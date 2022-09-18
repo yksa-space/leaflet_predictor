@@ -70,7 +70,7 @@ function showMousePos(LatLng) {
     $("#cursor_lon").html(curr_lon);
     // if we have a prediction displayed
     // show range from launch and land:
-    if ( map_items['launch_marker'] != null ) {
+    if ( (map_items['launch_marker'] != null) && (hourly_mode == false)) {
         var launch_pt = map_items['launch_marker'].getLatLng();
         var land_pt = map_items['land_marker'].getLatLng();
         var range_launch = distHaversine(launch_pt, LatLng, 1);
@@ -170,6 +170,21 @@ function clearMapItems() {
         }
     }
     map_items = [];
+
+    // Clear hourly prediction data too
+    if( getAssocSize(hourly_predictions) > 0 ) {
+        appendDebug("Clearing hourly prediction data.");
+        for( i in hourly_predictions) {
+            for (j in hourly_predictions[i]['layers']){
+                hourly_predictions[i]['layers'][j].remove();
+            }
+        }
+    }
+
+    if(hourly_polyline){
+        hourly_polyline.remove();
+        hourly_polyline = null;
+    }
 }
 
 // The Haversine formula to calculate the distance across the surface between

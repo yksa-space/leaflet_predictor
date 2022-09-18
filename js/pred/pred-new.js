@@ -35,6 +35,7 @@ function initLaunchCard(){
 function runPrediction(){
     // Read the user-supplied parameters and request a prediction.
     var run_settings = {};
+    var extra_settings = {};
     run_settings.profile = $('#flight_profile').val();
     run_settings.pred_type = $('#prediction_type').val();
     
@@ -48,7 +49,7 @@ function runPrediction(){
     // Months are zero-indexed in Javascript. Wat.
     var launch_time = moment.utc([year, month-1, day, hour, minute, 0, 0]);
     run_settings.launch_datetime = launch_time.format();
-    run_settings.launch_moment = launch_time;
+    extra_settings.launch_moment = launch_time;
 
     // Sanity check the launch date to see if it's not too far into the past or future.
     if(launch_time < (moment.utc().subtract(12, 'hours'))){
@@ -88,24 +89,24 @@ function runPrediction(){
     url.searchParams.set('launch_altitude', run_settings.launch_altitude);
     url.searchParams.set('ascent_rate', run_settings.ascent_rate);
     url.searchParams.set('profile', run_settings.profile);
+    url.searchParams.set('prediction_type', run_settings.pred_type);
     if (run_settings.profile == "standard_profile"){
         url.searchParams.set('burst_altitude', run_settings.burst_altitude);
         url.searchParams.set('descent_rate', run_settings.descent_rate);
     } else {
         url.searchParams.set('float_altitude', run_settings.float_altitude);
     }
-    // TODO = Hourly/Daily prediction settings.
 
     // Update browser URL.
     history.replaceState(
         {},
-        'Predictor v3.1',
+        'CUSF / SondeHub Predictor',
         url.href
     );
 
 
     // Run the request
-    tawhiriRequest(run_settings);
+    tawhiriRequest(run_settings, extra_settings);
 
 }
 
@@ -115,11 +116,12 @@ function runPrediction(){
 // Sondehub Tawhiri Instance
 var tawhiri_api = "https://api.v2.sondehub.org/tawhiri";
 
-function tawhiriRequest(settings){
+function tawhiriRequest(settings, extra_settings){
     // Request a prediction via the Tawhiri API.
     // Settings must be as per the API docs above.
 
     if(settings.pred_type=='single'){
+        hourly_mode = false;
         $.get( tawhiri_api, settings )
             .done(function( data ) {
                 processTawhiriResults(data, settings);
@@ -137,13 +139,73 @@ function tawhiriRequest(settings){
                 //throwError("test.");
                 //console.log(data);
             });
-    } else{
+    } else {
         // For Multiple predictions, we do things a bit differently.
-
+        hourly_mode = true;
         // First up clear off anything on the map.
         clearMapItems();
 
+        // Also clean up any hourly prediction data.
+        hourly_predictions = {};
+
+        var MAX_PRED_HOURS = 169;
+        var current_hour = 0;
+        var time_step = 24;
+
+        if(settings.pred_type=='daily'){
+            time_step = 24;
+        } else if (settings.pred_type=='1_hour'){
+            time_step = 1;
+        } else if (settings.pred_type=='3_hour'){
+            time_step = 3;
+        } else if (settings.pred_type=='6_hour'){
+            time_step = 6;
+        } else if (settings.pred_type=='12_hour'){
+            time_step = 12;
+        } else {
+            throwError("Invalid time step.");
+        }
+
         // Loop to advance time until end of prediction window
+        while(current_hour < MAX_PRED_HOURS){
+            // Update launch time
+            var current_moment = moment(extra_settings.launch_moment).add(current_hour, 'hours');
+
+            // Setup entries in the hourly prediction data store.
+            hourly_predictions[current_hour] = {};
+            hourly_predictions[current_hour]['layers'] = {};
+            hourly_predictions[current_hour]['settings'] = {...settings};
+            hourly_predictions[current_hour]['settings']['launch_datetime'] = current_moment.format();
+            
+            // Copy our current settings for passing into the requst.
+            var current_settings = {...hourly_predictions[current_hour]['settings']};
+
+            console.log(current_settings);
+
+            $.get( {url:tawhiri_api, 
+                data: current_settings, 
+                current_hour: current_hour} )
+                .done(function( data ) {
+                    processHourlyTawhiriResults(data, current_settings, this.current_hour);
+                })
+                .fail(function(data) {
+                    var prediction_error = "Prediction failed. ";
+                    if(data.hasOwnProperty("responseJSON"))
+                    {
+                        prediction_error += data.responseJSON.error.description;
+                    }
+                    console.log(prediction_error);
+                    //throwError(prediction_error);
+                })
+                .always(function(data) {
+                    //throwError("test.");
+                    //console.log(data);
+                });
+
+            current_hour += time_step;
+
+        }
+
             // Generate prediction number and information to pass onwards to plotting
             // Run async get call, pass in prediction details.
 
@@ -356,8 +418,6 @@ function writePredictionInfo(settings, metadata, request) {
             //map.setZoom(7);
     });
 
-    console.log(request);
-
     var run_time = moment.utc(metadata.complete_datetime).format();
     var dataset = moment.utc(request.dataset).format("YYYYMMDD-HH");
 
@@ -366,25 +426,47 @@ function writePredictionInfo(settings, metadata, request) {
     $("#dataset").html(dataset);
 }
 
-function plotMultiplePrediction(prediction){
 
-    appendDebug("Flight data parsed, creating map plot...");
-    clearMapItems();
+function processHourlyTawhiriResults(data, settings, current_hour){
+    // Process results from a Tawhiri run.
+
+    if(data.hasOwnProperty('error')){
+        // The prediction API has returned an error.
+        throwError("Predictor returned error: "+ data.error.description)
+    } else {
+
+        var prediction_results = parsePrediction(data.prediction);
+
+        // Save prediction data into our hourly predictor data store.
+        hourly_predictions[current_hour]['results'] = prediction_results;
+
+        // Now plot...
+        plotMultiplePrediction(prediction_results, current_hour);
+
+        //writePredictionInfo(settings, data.metadata, data.request);
+        
+    }
+
+    //console.log(data);
+
+}
+
+function plotMultiplePrediction(prediction, current_hour){
 
     var launch = prediction.launch;
     var landing = prediction.landing;
     var burst = prediction.burst;
 
-    // Calculate range and time of flight
-    var range = distHaversine(launch.latlng, landing.latlng, 1);
-    var flighttime = "";
-    var f_hours = Math.floor((prediction.flight_time % 86400) / 3600);
-    var f_minutes = Math.floor(((prediction.flight_time % 86400) % 3600) / 60);
-    if ( f_minutes < 10 ) f_minutes = "0"+f_minutes;
-    flighttime = f_hours + "hr" + f_minutes;
-    $("#cursor_pred_range").html(range);
-    $("#cursor_pred_time").html(flighttime);
-    cursorPredShow();
+    // // Calculate range and time of flight
+    // var range = distHaversine(launch.latlng, landing.latlng, 1);
+    // var flighttime = "";
+    // var f_hours = Math.floor((prediction.flight_time % 86400) / 3600);
+    // var f_minutes = Math.floor(((prediction.flight_time % 86400) % 3600) / 60);
+    // if ( f_minutes < 10 ) f_minutes = "0"+f_minutes;
+    // flighttime = f_hours + "hr" + f_minutes;
+    // $("#cursor_pred_range").html(range);
+    // $("#cursor_pred_time").html(flighttime);
+    // cursorPredShow();
 
     // Make some nice icons
     var launch_icon = L.icon({
@@ -393,66 +475,161 @@ function plotMultiplePrediction(prediction){
         iconAnchor: [5,5]
     });
 
-    var land_icon = L.icon({
-        iconUrl: land_img,
-        iconSize: [10,10],
-        iconAnchor: [5,5]
-    });
+    // var land_icon = L.icon({
+    //     iconUrl: land_img,
+    //     iconSize: [10,10],
+    //     iconAnchor: [5,5]
+    // });
 
-    var burst_icon = L.icon({
-        iconUrl: burst_img,
-        iconSize: [16,16],
-        iconAnchor: [8,8]
-    });
+    // var burst_icon = L.icon({
+    //     iconUrl: burst_img,
+    //     iconSize: [16,16],
+    //     iconAnchor: [8,8]
+    // });
 
+   // 
 
-    var launch_marker = L.marker(
-        launch.latlng,
-        {
-            title: 'Balloon launch ('+launch.latlng.lat.toFixed(4)+', '+launch.latlng.lng.toFixed(4)+') at ' 
-            + launch.datetime.format("HH:mm") + " UTC",
-            icon: launch_icon
+    if(!map_items.hasOwnProperty("launch_marker")){
+        var launch_marker = L.marker(
+            launch.latlng,
+            {
+                title: 'Balloon launch ('+launch.latlng.lat.toFixed(4)+', '+launch.latlng.lng.toFixed(4)+')',
+                icon: launch_icon
+            }
+        ).addTo(map);
+
+        map_items['launch_marker'] = launch_marker;
+    }
+
+    var land_marker= new L.CircleMarker(landing.latlng, {
+        radius: 4,
+        fillOpacity: 1.0,
+        zIndexOffset: 1000,
+        color: "#801313",
+        title: '<b>Launch Time: </b>' + launch.datetime.format() + '<br/>' + 'Predicted Landing ('+landing.latlng.lat.toFixed(4)+', '+landing.latlng.lng.toFixed(4)+')',
+        current_hour: current_hour // Added in so we can extract this when we get a click event.
+    }).addTo(map);
+
+    var predict_description =  '<b>Launch Time: </b>' + launch.datetime.format() + '<br/>' + 
+    '<b>Predicted Landing:</b> '+landing.latlng.lat.toFixed(4)+', '+landing.latlng.lng.toFixed(4)+ '</br>' +
+    '<b>Landing Time: </b>' + landing.datetime.format() + '<br/>';
+
+    var landing_popup = new L.popup(
+        { autoClose: false, 
+            closeOnClick: false, 
+        }).setContent(predict_description);
+    land_marker.bindPopup(landing_popup);
+    land_marker.on('click', showHideHourlyPrediction);
+
+    hourly_predictions[current_hour]['layers']['landing_marker'] = land_marker;
+    hourly_predictions[current_hour]['landing_latlng'] = landing.latlng;
+
+    // Generate polyline latlons.
+    landing_track = [];
+    landing_track_complete = true;
+    for (i in hourly_predictions){
+        if(hourly_predictions[i]['landing_latlng']){
+            landing_track.push(hourly_predictions[i]['landing_latlng']);
+        }else{
+            landing_track_complete = false;
         }
-    ).addTo(map);
-    
-    var land_marker = L.marker(
-        landing.latlng,
-        {
-            title: 'Predicted Landing ('+landing.latlng.lat.toFixed(4)+', '+landing.latlng.lng.toFixed(4)+') at ' 
-            + landing.datetime.format("HH:mm") + " UTC",
-            icon: land_icon
+    }
+    // If we dont have any undefined elements, plot.
+    if(landing_track_complete){
+        if(hourly_polyline){
+            hourly_polyline.setLatLngs(landing_track);
+        } else {
+            hourly_polyline = L.polyline(
+                landing_track,
+                {
+                    weight: 2,
+                    color: '#801313'
+                }
+            ).addTo(map);
         }
-    ).addTo(map);
 
-    var pop_marker = L.marker(
-        burst.latlng,
-        {
-            title: 'Balloon burst ('+burst.latlng.lat.toFixed(4)+', '+burst.latlng.lng.toFixed(4)+ 
-            ' at altitude ' + burst.latlng.alt.toFixed(0) + ') at ' 
-            + burst.datetime.format("HH:mm") + " UTC",
-            icon: burst_icon
-        }
-    ).addTo(map);
+        map.fitBounds(hourly_polyline.getBounds());
+        map.setZoom(8);
 
-    var path_polyline = L.polyline(
-        prediction.flight_path,
-        {
-            weight: 3,
-            color: '#000000'
-        }
-    ).addTo(map);
+    }
+
+    // var pop_marker = L.marker(
+    //     burst.latlng,
+    //     {
+    //         title: 'Balloon burst ('+burst.latlng.lat.toFixed(4)+', '+burst.latlng.lng.toFixed(4)+ 
+    //         ' at altitude ' + burst.latlng.alt.toFixed(0) + ') at ' 
+    //         + burst.datetime.format("HH:mm") + " UTC",
+    //         icon: burst_icon
+    //     }
+    // ).addTo(map);
+
+    // var path_polyline = L.polyline(
+    //     prediction.flight_path,
+    //     {
+    //         weight: 3,
+    //         color: '#000000'
+    //     }
+    // ).addTo(map);
 
 
-    // Add the launch/land markers to map
-    // We might need access to these later, so push them associatively
-    map_items['launch_marker'] = launch_marker;
-    map_items['land_marker'] = land_marker;
-    map_items['pop_marker'] = pop_marker;
-    map_items['path_polyline'] = path_polyline;
 
     // Pan to the new position
-    map.panTo(launch.latlng);
-    map.setZoom(8);
+    // map.panTo(launch.latlng);
+    // map.setZoom(8);
 
     return true;
+}
+
+function showHideHourlyPrediction(e){
+
+    // Extract the current hour from the marker options.
+    var current_hour = e.target.options.current_hour;
+    var current_pred = hourly_predictions[current_hour]['results'];
+    var landing = current_pred.landing;
+    var launch = current_pred.launch;
+    var burst = current_pred.burst;
+    
+
+    if(hourly_predictions[current_hour]['layers'].hasOwnProperty('flight_path')){
+        // Flight path layer already exists, remove it and the burst icon.
+        hourly_predictions[current_hour]['layers']['flight_path'].remove()
+        hourly_predictions[current_hour]['layers']['pop_marker'].remove()
+        delete hourly_predictions[current_hour]['layers'].flight_path;
+        delete hourly_predictions[current_hour]['layers'].pop_marker;
+
+    } else {
+        // We need to make new icons.
+
+        var burst_icon = L.icon({
+            iconUrl: burst_img,
+            iconSize: [16,16],
+            iconAnchor: [8,8]
+        });
+
+        var pop_marker = L.marker(
+            burst.latlng,
+            {
+                title: 'Balloon burst ('+burst.latlng.lat.toFixed(4)+', '+burst.latlng.lng.toFixed(4)+ 
+                ' at altitude ' + burst.latlng.alt.toFixed(0) + ') at ' 
+                + burst.datetime.format("HH:mm") + " UTC",
+                icon: burst_icon,
+                current_hour: current_hour
+            }
+        ).addTo(map);
+        
+        hourly_predictions[current_hour]['layers']['pop_marker'] = pop_marker;
+
+        var path_polyline = L.polyline(
+            current_pred.flight_path,
+            {
+                weight: 3,
+                color: '#000000',
+                current_hour: current_hour
+            }
+        ).addTo(map);
+        path_polyline.on('click', showHideHourlyPrediction);
+
+        hourly_predictions[current_hour]['layers']['flight_path'] = path_polyline;
+    }
+
 }

@@ -71,6 +71,9 @@ function readURLParams() {
     if(url.searchParams.has('profile')){
         $("#flight_profile").val(url.searchParams.get('profile'));
     }
+    if(url.searchParams.has('prediction_type')){
+        $("#prediction_type").val(url.searchParams.get('prediction_type'));
+    }
     if(url.searchParams.has('burst_altitude')){
         $("#burst").val(url.searchParams.get('burst_altitude'));
     }
