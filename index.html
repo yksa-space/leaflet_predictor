@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>Predictor v3.0</title>
+    <title>Predictor v3.1</title>
 
     <!--<link href="css/bootstrap.min.css" rel="stylesheet">-->
     <link href="css/leaflet.css" rel="stylesheet">
@@ -440,6 +440,17 @@
                     Advanced</a>
             </td>
         </tr> -->
+        <tr>
+            <td>Prediction Type:</td>
+            <td><select id="prediction_type">
+                <option value="single" selected="selected">Single</option>
+                <option value="1_hour">Hourly</option>
+                <option value="3_hour">3-Hourly</option>
+                <option value="6_hour">6-Hourly</option>
+                <option value="6_hour">6-Hourly</option>
+                <option value="daily">Daily</option>
+            </select></td>
+        </tr>
         <tr>
             <td></td>
             <td><input name="submit" id="run_pred_btn" onclick="runPrediction();" value="Run Prediction">

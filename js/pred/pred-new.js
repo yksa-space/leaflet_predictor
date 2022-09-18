@@ -36,6 +36,7 @@ function runPrediction(){
     // Read the user-supplied parameters and request a prediction.
     var run_settings = {};
     run_settings.profile = $('#flight_profile').val();
+    run_settings.pred_type = $('#prediction_type').val();
     
     // Grab date values
     var year = $('#year').val();
@@ -47,6 +48,7 @@ function runPrediction(){
     // Months are zero-indexed in Javascript. Wat.
     var launch_time = moment.utc([year, month-1, day, hour, minute, 0, 0]);
     run_settings.launch_datetime = launch_time.format();
+    run_settings.launch_moment = launch_time;
 
     // Sanity check the launch date to see if it's not too far into the past or future.
     if(launch_time < (moment.utc().subtract(12, 'hours'))){
@@ -77,8 +79,6 @@ function runPrediction(){
     }
 
 
-    console.log(run_settings);
-
     // Update the URL with the supplied parameters.
     url = new URL(window.location.href);
     // Should probably clear all these parameters before setting them again?
@@ -94,8 +94,8 @@ function runPrediction(){
     } else {
         url.searchParams.set('float_altitude', run_settings.float_altitude);
     }
+    // TODO = Hourly/Daily prediction settings.
 
-    console.log(url.href);
     // Update browser URL.
     history.replaceState(
         {},
@@ -118,23 +118,39 @@ var tawhiri_api = "https://api.v2.sondehub.org/tawhiri";
 function tawhiriRequest(settings){
     // Request a prediction via the Tawhiri API.
     // Settings must be as per the API docs above.
-    $.get( tawhiri_api, settings )
-        .done(function( data ) {
-            processTawhiriResults(data, settings);
-        })
-        .fail(function(data) {
-            var prediction_error = "Prediction failed. ";
-            if(data.hasOwnProperty("responseJSON"))
-            {
-                prediction_error += data.responseJSON.error.description;
-            }
 
-            throwError(prediction_error);
-        })
-        .always(function(data) {
-            //throwError("test.");
-            //console.log(data);
-        });
+    if(settings.pred_type=='single'){
+        $.get( tawhiri_api, settings )
+            .done(function( data ) {
+                processTawhiriResults(data, settings);
+            })
+            .fail(function(data) {
+                var prediction_error = "Prediction failed. ";
+                if(data.hasOwnProperty("responseJSON"))
+                {
+                    prediction_error += data.responseJSON.error.description;
+                }
+
+                throwError(prediction_error);
+            })
+            .always(function(data) {
+                //throwError("test.");
+                //console.log(data);
+            });
+    } else{
+        // For Multiple predictions, we do things a bit differently.
+
+        // First up clear off anything on the map.
+        clearMapItems();
+
+        // Loop to advance time until end of prediction window
+            // Generate prediction number and information to pass onwards to plotting
+            // Run async get call, pass in prediction details.
+
+            // Need new processing functions to plot just the landing spot, and then somehow a line between them?
+            
+
+    }
 }
 
 function processTawhiriResults(data, settings){
@@ -348,4 +364,95 @@ function writePredictionInfo(settings, metadata, request) {
 
     $("#run_time").html(run_time);
     $("#dataset").html(dataset);
+}
+
+function plotMultiplePrediction(prediction){
+
+    appendDebug("Flight data parsed, creating map plot...");
+    clearMapItems();
+
+    var launch = prediction.launch;
+    var landing = prediction.landing;
+    var burst = prediction.burst;
+
+    // Calculate range and time of flight
+    var range = distHaversine(launch.latlng, landing.latlng, 1);
+    var flighttime = "";
+    var f_hours = Math.floor((prediction.flight_time % 86400) / 3600);
+    var f_minutes = Math.floor(((prediction.flight_time % 86400) % 3600) / 60);
+    if ( f_minutes < 10 ) f_minutes = "0"+f_minutes;
+    flighttime = f_hours + "hr" + f_minutes;
+    $("#cursor_pred_range").html(range);
+    $("#cursor_pred_time").html(flighttime);
+    cursorPredShow();
+
+    // Make some nice icons
+    var launch_icon = L.icon({
+        iconUrl: launch_img,
+        iconSize: [10,10],
+        iconAnchor: [5,5]
+    });
+
+    var land_icon = L.icon({
+        iconUrl: land_img,
+        iconSize: [10,10],
+        iconAnchor: [5,5]
+    });
+
+    var burst_icon = L.icon({
+        iconUrl: burst_img,
+        iconSize: [16,16],
+        iconAnchor: [8,8]
+    });
+
+
+    var launch_marker = L.marker(
+        launch.latlng,
+        {
+            title: 'Balloon launch ('+launch.latlng.lat.toFixed(4)+', '+launch.latlng.lng.toFixed(4)+') at ' 
+            + launch.datetime.format("HH:mm") + " UTC",
+            icon: launch_icon
+        }
+    ).addTo(map);
+    
+    var land_marker = L.marker(
+        landing.latlng,
+        {
+            title: 'Predicted Landing ('+landing.latlng.lat.toFixed(4)+', '+landing.latlng.lng.toFixed(4)+') at ' 
+            + landing.datetime.format("HH:mm") + " UTC",
+            icon: land_icon
+        }
+    ).addTo(map);
+
+    var pop_marker = L.marker(
+        burst.latlng,
+        {
+            title: 'Balloon burst ('+burst.latlng.lat.toFixed(4)+', '+burst.latlng.lng.toFixed(4)+ 
+            ' at altitude ' + burst.latlng.alt.toFixed(0) + ') at ' 
+            + burst.datetime.format("HH:mm") + " UTC",
+            icon: burst_icon
+        }
+    ).addTo(map);
+
+    var path_polyline = L.polyline(
+        prediction.flight_path,
+        {
+            weight: 3,
+            color: '#000000'
+        }
+    ).addTo(map);
+
+
+    // Add the launch/land markers to map
+    // We might need access to these later, so push them associatively
+    map_items['launch_marker'] = launch_marker;
+    map_items['land_marker'] = land_marker;
+    map_items['pop_marker'] = pop_marker;
+    map_items['path_polyline'] = path_polyline;
+
+    // Pan to the new position
+    map.panTo(launch.latlng);
+    map.setZoom(8);
+
+    return true;
 }
