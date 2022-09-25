@@ -169,6 +169,12 @@ function tawhiriRequest(settings, extra_settings){
             time_step = 12;
         } else {
             throwError("Invalid time step.");
+            return;
+        }
+
+        if(settings.profile != "standard_profile"){
+            throwError("Hourly/Daily predictions are only available for the standard flight profile.");
+            return;
         }
 
         // Loop to advance time until end of prediction window
