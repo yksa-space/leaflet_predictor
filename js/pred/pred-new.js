@@ -119,6 +119,8 @@ function runPrediction(){
 //var tawhiri_api = "https://predict.cusf.co.uk/api/v1/";
 // Sondehub Tawhiri Instance
 var tawhiri_api = "https://api.v2.sondehub.org/tawhiri";
+// Approximately how many hours into the future the model covers.
+var MAX_PRED_HOURS = 169;
 
 function tawhiriRequest(settings, extra_settings){
     // Request a prediction via the Tawhiri API.
@@ -152,7 +154,6 @@ function tawhiriRequest(settings, extra_settings){
         // Also clean up any hourly prediction data.
         hourly_predictions = {};
 
-        var MAX_PRED_HOURS = 169;
         var current_hour = 0;
         var time_step = 24;
 
@@ -483,18 +484,27 @@ function plotMultiplePrediction(prediction, current_hour){
         map_items['launch_marker'] = launch_marker;
     }
 
+    var iconColour = ConvertRGBtoHex(evaluate_cmap((current_hour/MAX_PRED_HOURS), 'turbo'));
     var land_marker= new L.CircleMarker(landing.latlng, {
-        radius: 4,
+        radius: 5,
         fillOpacity: 1.0,
         zIndexOffset: 1000,
-        color: "#801313",
+        fillColor: iconColour,
+        stroke: true,
+        weight: 1,
+        color: "#000000",
         title: '<b>Launch Time: </b>' + launch.datetime.format() + '<br/>' + 'Predicted Landing ('+landing.latlng.lat.toFixed(4)+', '+landing.latlng.lng.toFixed(4)+')',
         current_hour: current_hour // Added in so we can extract this when we get a click event.
     }).addTo(map);
 
+    var _base_url = tawhiri_api + "?" + $.param(hourly_predictions[current_hour]['settings']) 
+    var _csv_url = _base_url + "&format=csv";
+    var _kml_url = _base_url + "&format=kml";
+
     var predict_description =  '<b>Launch Time: </b>' + launch.datetime.format() + '<br/>' + 
     '<b>Predicted Landing:</b> '+landing.latlng.lat.toFixed(4)+', '+landing.latlng.lng.toFixed(4)+ '</br>' +
-    '<b>Landing Time: </b>' + landing.datetime.format() + '<br/>';
+    '<b>Landing Time: </b>' + landing.datetime.format() + '<br/>' +
+    '<b>Download: </b> <a href="'+_kml_url+'" target="_blank">KML</a>  <a href="'+_csv_url+'" target="_blank">CSV</a></br>';
 
     var landing_popup = new L.popup(
         { autoClose: false, 
@@ -525,9 +535,15 @@ function plotMultiplePrediction(prediction, current_hour){
                 landing_track,
                 {
                     weight: 2,
-                    color: '#801313'
+                    zIndexOffset: 100,
+                    color: '#000000'
                 }
             ).addTo(map);
+        }
+
+        for (i in hourly_predictions){
+            hourly_predictions[i]['layers']['landing_marker'].remove();
+            hourly_predictions[i]['layers']['landing_marker'].addTo(map);
         }
 
         map.fitBounds(hourly_polyline.getBounds());
