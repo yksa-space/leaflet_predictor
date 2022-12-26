@@ -1,4 +1,9 @@
 {
+    "Auburn": {
+        "altitude"  :   306,
+        "latitude"  :   -34.0297,
+        "longitude" :   138.6917
+    },
     "Churchill": {
         "latitude"  :   52.2135,
         "longitude" :   0.0964,
@@ -15,9 +20,9 @@
         "longitude" :   138.5194
     },
     "Tullamarine": {
-    "altitude": 0,
-    "latitude": -37.6656,
-    "longitude": 144.8319
+        "altitude": 0,
+        "latitude": -37.6656,
+        "longitude": 144.8319
     },
     "Boston Spa": { 
         "latitude"  :   53.8997,
