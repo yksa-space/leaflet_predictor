@@ -524,8 +524,7 @@ function parseCSV(lines) {
     map_items['path_polyline'] = path_polyline;
 
     // Pan to the new position
-    map.panTo(launch_pt);
-    map.setZoom(8);
+    map.setView(launch_pt, 8);
 
     return true;
 }

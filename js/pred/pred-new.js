@@ -405,8 +405,7 @@ function plotStandardPrediction(prediction){
     map_items['path_polyline'] = path_polyline;
 
     // Pan to the new position
-    map.panTo(launch.latlng);
-    map.setZoom(8);
+    map.setView(launch.latlng,8)
 
     return true;
 }

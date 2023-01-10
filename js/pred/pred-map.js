@@ -116,8 +116,7 @@ function plotClick() {
         .addTo(map);
 
     map_items['clickMarker'] = clickMarker;
-    map.panTo(click_pt);
-    map.setZoom(8);
+    map.setView(click_pt, 8);
 }
 
 // Given a GLatLng object, write the latitude and longitude to the launch card
