@@ -133,7 +133,7 @@ function tawhiriRequest(settings, extra_settings){
                 processTawhiriResults(data, settings);
             })
             .fail(function(data) {
-                var prediction_error = "Prediction failed. ";
+                var prediction_error = "Prediction failed. Tawhiri may be under heavy load, please try again. ";
                 if(data.hasOwnProperty("responseJSON"))
                 {
                     prediction_error += data.responseJSON.error.description;
@@ -198,7 +198,7 @@ function tawhiriRequest(settings, extra_settings){
                     processHourlyTawhiriResults(data, current_settings, this.current_hour);
                 })
                 .fail(function(data) {
-                    var prediction_error = "Prediction failed. ";
+                    var prediction_error = "Prediction failed. Tawhiri may be under heavy load, please try again. ";
                     if(data.hasOwnProperty("responseJSON"))
                     {
                         prediction_error += data.responseJSON.error.description;

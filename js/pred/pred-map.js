@@ -24,6 +24,11 @@ function initMap(centre_lat, centre_lon, zoom_level) {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
+    // Open Topo
+    var osm_topo_map = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://wiki.openstreetmap.org/wiki/OpenTopoMap">OpenTopoMap</a> contributors'
+    });
+
     // Add ESRI Satellite Map layers.
     var esrimapLink = 
     '<a href="http://www.esri.com/">Esri</a>';
@@ -36,9 +41,12 @@ function initMap(centre_lat, centre_lon, zoom_level) {
         maxZoom: 18,
     });
 
-    var map_layers = {'OSM':osm_map, 'ESRI Satellite':esri_sat_map};
+    var map_layers = {'OSM':osm_map, 'ESRI Satellite':esri_sat_map, 'OpenTopoMap':osm_topo_map};
 
     map.addControl(new L.Control.Layers(map_layers, null, {position: 'topleft'}));
+
+    // Map scale
+    L.control.scale({imperial: false, metric: true}).addTo(map);
 
 
 }
