@@ -48,6 +48,11 @@
         "altitude"  :   150,
         "latitude"  :   51.95023,
         "longitude" :   -2.5445
+    },
+    "Ararat": {
+        "altitude"  :   295,
+        "latitude"  :   -37.294,
+        "longitude" :   142.9374
     }
 
 }
