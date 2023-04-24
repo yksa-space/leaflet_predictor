@@ -456,7 +456,7 @@ function parseCSV(lines) {
     // Calculate range and time of flight
     var range = distHaversine(launch_pt, land_pt, 1);
     var flighttime = land_time - launch_time;
-    var f_hours = Math.floor((flighttime % 86400) / 3600);
+    var f_hours = Math.floor(flighttime / 3600);
     var f_minutes = Math.floor(((flighttime % 86400) % 3600) / 60);
     if ( f_minutes < 10 ) f_minutes = "0"+f_minutes;
     flighttime = f_hours + "hr" + f_minutes;
