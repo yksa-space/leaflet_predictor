@@ -331,7 +331,7 @@ function plotStandardPrediction(prediction){
     // Calculate range and time of flight
     var range = distHaversine(launch.latlng, landing.latlng, 1);
     var flighttime = "";
-    var f_hours = Math.floor((prediction.flight_time % 86400) / 3600);
+    var f_hours = Math.floor(prediction.flight_time / 3600);
     var f_minutes = Math.floor(((prediction.flight_time % 86400) % 3600) / 60);
     if ( f_minutes < 10 ) f_minutes = "0"+f_minutes;
     flighttime = f_hours + "hr" + f_minutes;
