@@ -63,7 +63,7 @@ function readURLParams() {
         $("#initial_alt").val(url.searchParams.get('launch_altitude'));
     }
     if(url.searchParams.has('ascent_rate')){
-        $("#ascent_rate").val(url.searchParams.get('ascent_rate'));
+        $("#ascent").val(url.searchParams.get('ascent_rate'));
     }
     if(url.searchParams.has('descent_rate')){
         $("#drag").val(url.searchParams.get('descent_rate'));
