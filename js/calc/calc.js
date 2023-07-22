@@ -58,8 +58,8 @@ function sanity_check_inputs(mb, mp, mp_set, tar, tba, tar_set, tba_set) {
     } else if(mp < 20) {
         set_error('mp', "Too small! (< 20g)");
         return 1;
-    } else if(mp > 5000) {
-        set_error('mp', "Too large! (> 5kg)");
+    } else if(mp > 20000) {
+        set_error('mp', "Too large! (> 20kg)");
         return 1;
     }
 
