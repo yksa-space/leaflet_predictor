@@ -33,6 +33,9 @@ function EH_BurstCalc() {
     $("#burst-calc-show").click(function() {
         $("#burst-calc-wrapper").show();
     });
+    $("#define-custom-profile").click(function() {
+        $("#define-custom-profile-wrapper").show();
+    });
     $("#burst-calc-show").hover(
         function() {
             $("#ascent,#burst").css("background-color", "#AACCFF");
@@ -51,6 +54,9 @@ function EH_BurstCalc() {
         $("#burst-calc-wrapper").hide();
         $("#modelForm").show();
     });
+    $("#define-custom-profile-close").click(function() {
+        $("#define-custom-profile-wrapper").hide();
+    })
     $("#burst-calc-advanced-show").click(function() {
         // Show the burst calculator constants
         // We use a callback function to fade in the new content to make

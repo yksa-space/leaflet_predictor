@@ -174,6 +174,20 @@
 </div>
 
 <!-- Burst calculator window -->
+<div id="define-custom-profile-wrapper" class="box ui-corner-all">
+    <img src="images/drag_handle.png" class="handle" />
+    <div id="burst-calc">
+        <b>Burst Calculator</b>
+        <br>
+            <p>Define your flight profile as CSV below:</p>
+            <textarea rows=5 id="custom_profile_data">Altitude,Rate</textarea>
+        <br>
+        <input type="button" id="define-custom-profile-close" name="define-custom-profile-submit" 
+            value="Close"/ >
+    </div>
+</div>
+
+<!-- Burst calculator window -->
 <div id="burst-calc-wrapper" class="box ui-corner-all">
     <img src="images/drag_handle.png" class="handle" />
     <div id="burst-calc">
@@ -432,13 +446,19 @@
                 <option value="standard_profile" selected="selected">Standard</option>
                 <option value="float_profile">Float</option>
                 <option value="reverse_profile">Reverse (ascent only)</option>
+                <option value="custom_profile">Custom</option>
             </select></td>
         </tr>
         <tr>
             <td colspan="2">
                 <a id="burst-calc-show" class="tipsyLink"
-                    title="Use a calculator to find highlighted values">
-                    Use Burst Calculator</a>
+                    title="Use a calculator to find highlighted values">Use Burst Calculator</a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <a id="define-custom-profile" class="tipsyLink"
+                    title="Define custom flight profile">Define Custom Flight Profile</a>
             </td>
         </tr>
         <tr>

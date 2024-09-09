@@ -73,6 +73,18 @@ html, body, #map_canvas {
     display: none;
 }
 
+#define-custom-profile-wrapper {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 400px;
+    margin-left: -200px;
+    margin-top: -200px;
+    padding: 1em;
+    text-align: center;
+    display: none;
+}
+
 #notam-settings-wrapper {
     position: absolute;
     left: 50%;

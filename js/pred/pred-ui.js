@@ -24,6 +24,8 @@ function initUI() {
             'img.handle', snap: '#map_canvas'});
     $("#burst-calc-wrapper").draggable({containment: '#map_canvas', handle:
             'img.handle', snap: '#map_canvas'}); 
+    $("#define-custom-profile-wrapper").draggable({containment: '#map_canvas', handle:
+            'img.handle', snap: '#map_canvas'}); 
     
     // Activate buttons to jqueryui styling
     $("#run_pred_btn").button();
@@ -32,6 +34,7 @@ function initUI() {
     $("#burst-calc-close").button();
     $("#burst-calc-advanced-show").button();
     $("#burst-calc-advanced-hide").button();
+    $("define-custom-profile-close").button();
 }
 
 // Throw an error window containing <data> and a 'close' link

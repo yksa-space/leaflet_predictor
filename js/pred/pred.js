@@ -27,12 +27,6 @@ $(document).ready(function() {
 
     // Populate the launch card time/date fields
     initLaunchCard();
-    
-    // Check if an old prediction is to be displayed, and process if so
-    //displayOld();
-
-    // Read in URL parameters if provided, and run a prediction again.
-    var params_provided = readURLParams();
 
     // Plot the initial launch location
     plotClick();
@@ -41,7 +35,7 @@ $(document).ready(function() {
     calc_init();
 
     // Run the prediction if it is provided in the URL.
-    if(params_provided) {
+    if(readURLParams()) {
         runPrediction();
     }
 });
@@ -70,6 +64,9 @@ function readURLParams() {
     }
     if(url.searchParams.has('profile')){
         $("#flight_profile").val(url.searchParams.get('profile'));
+    }
+    if(url.searchParams.has('custom_profile_data')){
+        $("#custom_profile_data").val(atob(url.searchParams.get('custom_profile_data')));
     }
     if(url.searchParams.has('prediction_type')){
         $("#prediction_type").val(url.searchParams.get('prediction_type'));

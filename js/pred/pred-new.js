@@ -74,6 +74,8 @@ function runPrediction(){
     if (run_settings.profile == "standard_profile"){
         run_settings.burst_altitude = parseFloat($('#burst').val());
         run_settings.descent_rate = parseFloat($('#drag').val());
+    } else if (run_settings.profile == "custom_profile") {
+        run_settings.custom_profile_data = btoa($('#custom_profile_data').val().trim())
     } else {
         run_settings.float_altitude = parseFloat($('#burst').val());
         run_settings.stop_datetime = launch_time.add(1, 'days').format();
@@ -97,7 +99,10 @@ function runPrediction(){
     if (run_settings.profile == "standard_profile"){
         url.searchParams.set('burst_altitude', run_settings.burst_altitude);
         url.searchParams.set('descent_rate', run_settings.descent_rate);
-    } else {
+    } else if (run_settings.profile == "custom_profile") {
+        url.searchParams.set('custom_profile_data', btoa($('#custom_profile_data').val().trim()))
+    } 
+    else {
         url.searchParams.set('float_altitude', run_settings.float_altitude);
     }
 
