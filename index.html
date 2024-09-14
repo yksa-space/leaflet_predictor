@@ -178,9 +178,13 @@
     <img src="images/drag_handle.png" class="handle" />
     <div id="custom-profile">
         <b>Custom Flight Profile</b>
+            <p>Define ascent and descent curves as CSV (#Altitude,Rate), with rate in m/s</p>
         <br>
-            <p>Define your flight profile as CSV below:</p>
-            <textarea rows=5 id="custom_profile_data">Altitude,Rate</textarea>
+            <p>Ascent curve:</p>
+            <textarea rows=5 id="ascent_curve"></textarea>\
+        <br>
+            <p>Descent curve:</p>
+            <textarea rows=5 id="descent_curve"></textarea>
         <br>
         <input type="button" id="define-custom-profile-close" name="define-custom-profile-submit" 
             value="Close"/ >

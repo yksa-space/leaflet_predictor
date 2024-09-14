@@ -65,8 +65,11 @@ function readURLParams() {
     if(url.searchParams.has('profile')){
         $("#flight_profile").val(url.searchParams.get('profile'));
     }
-    if(url.searchParams.has('custom_profile_data')){
-        $("#custom_profile_data").val(atob(url.searchParams.get('custom_profile_data')));
+    if(url.searchParams.has('ascent_curve')){
+        $("#ascent_curve").val(atob(url.searchParams.get('ascent_curve')));
+    }
+    if(url.searchParams.has('descent_curve')){
+        $("#descent_curve").val(atob(url.searchParams.get('descent_curve')));
     }
     if(url.searchParams.has('prediction_type')){
         $("#prediction_type").val(url.searchParams.get('prediction_type'));

@@ -75,7 +75,9 @@ function runPrediction(){
         run_settings.burst_altitude = parseFloat($('#burst').val());
         run_settings.descent_rate = parseFloat($('#drag').val());
     } else if (run_settings.profile == "custom_profile") {
-        run_settings.custom_profile_data = btoa($('#custom_profile_data').val().trim())
+        run_settings.burst_altitude = parseFloat($('#burst').val());
+        run_settings.ascent_curve = btoa($('#ascent_curve').val().trim())
+        run_settings.descent_curve = btoa($('#descent_curve').val().trim())
     } else {
         run_settings.float_altitude = parseFloat($('#burst').val());
         run_settings.stop_datetime = launch_time.add(1, 'days').format();
@@ -100,7 +102,9 @@ function runPrediction(){
         url.searchParams.set('burst_altitude', run_settings.burst_altitude);
         url.searchParams.set('descent_rate', run_settings.descent_rate);
     } else if (run_settings.profile == "custom_profile") {
-        url.searchParams.set('custom_profile_data', btoa($('#custom_profile_data').val().trim()))
+        url.searchParams.set('burst_altitude', run_settings.burst_altitude);
+        url.searchParams.set('ascent_curve', run_settings.ascent_curve)
+        url.searchParams.set('descent_curve', run_settings.descent_curve)
     } 
     else {
         url.searchParams.set('float_altitude', run_settings.float_altitude);
@@ -123,7 +127,7 @@ function runPrediction(){
 // Habitat Tawhiri Instance
 //var tawhiri_api = "https://predict.cusf.co.uk/api/v1/";
 // Sondehub Tawhiri Instance
-var tawhiri_api = "https://api.v2.sondehub.org/tawhiri";
+var tawhiri_api = "https://api.tawhiri.stratoflights.yktaero.space/api/v2/";
 // Approximately how many hours into the future the model covers.
 var MAX_PRED_HOURS = 169;
 
