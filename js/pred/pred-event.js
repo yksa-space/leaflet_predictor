@@ -36,6 +36,9 @@ function EH_BurstCalc() {
     $("#define-custom-profile").click(function() {
         $("#define-custom-profile-wrapper").show();
     });
+    $("#show-altitude-chart").click(function() {
+        $("#altitude-chart-wrapper").show();
+    });
     $("#burst-calc-show").hover(
         function() {
             $("#ascent,#burst").css("background-color", "#AACCFF");
@@ -56,6 +59,9 @@ function EH_BurstCalc() {
     });
     $("#define-custom-profile-close").click(function() {
         $("#define-custom-profile-wrapper").hide();
+    })
+    $("#altitude-chart-close").click(function() {
+        $("#altitude-chart-wrapper").hide();
     })
     $("#burst-calc-advanced-show").click(function() {
         // Show the burst calculator constants

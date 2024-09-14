@@ -13,6 +13,8 @@
 
 // Initialise the UI - this must be called on document ready
 function initUI() {
+    $.jqplot.config.enablePlugins = true;
+
     // Make UI elements such as windows draggable
     $("#input_form").draggable({containment: '#map_canvas', handle:
         'img.handle', snap: '#map_canvas'});
@@ -26,6 +28,8 @@ function initUI() {
             'img.handle', snap: '#map_canvas'}); 
     $("#define-custom-profile-wrapper").draggable({containment: '#map_canvas', handle:
             'img.handle', snap: '#map_canvas'}); 
+    $("#altitude-chart-wrapper").draggable({containment: '#map_canvas', handle:
+        'img.handle', snap: '#map_canvas'}); 
     
     // Activate buttons to jqueryui styling
     $("#run_pred_btn").button();
@@ -34,7 +38,9 @@ function initUI() {
     $("#burst-calc-close").button();
     $("#burst-calc-advanced-show").button();
     $("#burst-calc-advanced-hide").button();
-    $("define-custom-profile-close").button();
+    $("#define-custom-profile-close").button();
+    $("#altitude-chart-close").button()
+    $("#altitude-chart-reset-zoom").button()
 }
 
 // Throw an error window containing <data> and a 'close' link

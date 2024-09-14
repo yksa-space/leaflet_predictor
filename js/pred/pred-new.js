@@ -256,9 +256,33 @@ function processTawhiriResults(data, settings){
 
 }
 
+function formatDate(isoString) {
+    var date = new Date(isoString);
+  
+    var year = date.getFullYear();
+    var month = ('0' + (date.getMonth() + 1)).slice(-2); // Months are zero-based
+    var day = ('0' + date.getDate()).slice(-2);
+  
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var ampm = 'AM';
+  
+    if (hours >= 12) {
+      ampm = 'PM';
+      if (hours > 12) hours -= 12;
+    } else if (hours === 0) {
+      hours = 12;
+    }
+  
+    var formattedTime = hours + ':' + ('0' + minutes).slice(-2) + ampm;
+  
+    return year + '-' + month + '-' + day + ' ' + formattedTime;
+}
+
 function parsePrediction(prediction){
     // Convert a prediction in the Tawhiri API format to a Polyline.
 
+    var altitudes = [];
     var flight_path = [];
     var launch = {};
     var burst = {};
@@ -277,6 +301,7 @@ function parsePrediction(prediction){
         }
 
         flight_path.push([_lat, _lon, item.altitude]);
+        altitudes.push([formatDate(item.datetime), item.altitude]);
     });
 
     // Add the Descent or Float track to the flight path array.
@@ -289,7 +314,26 @@ function parsePrediction(prediction){
         }
 
         flight_path.push([_lat, _lon, item.altitude]);
+        altitudes.push([formatDate(item.datetime), item.altitude]);
     });
+ 
+    plot = $.jqplot('altitude-chart', [altitudes], {
+        title:'Altitude chart',
+        axes:{
+            xaxis:{
+                renderer:$.jqplot.DateAxisRenderer
+            }
+        },
+        cursor: {
+            zoom:true, 
+            looseZoom: true, 
+            constrainOutsideZoom: false
+        }
+    });
+
+    $("#altitude-chart-reset-zoom").click(function() {
+        plot.resetZoom();
+    })
 
     // Populate the launch, burst and landing points
     var launch_obj = ascent[0];

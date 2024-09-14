@@ -85,6 +85,18 @@ html, body, #map_canvas {
     display: none;
 }
 
+#altitude-chart-wrapper {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 700px;
+    margin-left: -200px;
+    margin-top: -200px;
+    padding: 1em;
+    text-align: center;
+    display: none;
+}
+
 #notam-settings-wrapper {
     position: absolute;
     left: 50%;
