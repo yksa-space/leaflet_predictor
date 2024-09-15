@@ -4,9 +4,7 @@ Cambridge University Spaceflight landing predictor - a web-based tool for predic
 
 This fork of the [original predictor](https://github.com/jonsowman/cusf-standalone-predictor) contains a continuation of the original CUSF predictor, which utilises the [Tawhiri API](https://github.com/projecthorus/tawhiri/), and also uses Leaflet for mapping instead of Google Maps. 
 
-A live version of the predictor intended for non-commercial use is available at http://predict.sondehub.org/ , hosted by the [Sondehub project](https://github.com/projecthorus/sondehub-infra/wiki).
-
-If hosting this yourself, please note that it uses the Sondehub-hosted instance of Tawhiri. Please [contact us](https://github.com/projecthorus/sondehub-infra/wiki#contacts) to discuss fair usage of this API.
+A live version of the predictor intended for non-commercial use is available at http://tawhiri.stratoflights.yktaero.space/ , hosted by the [Sakha Aerospace Systems, LLC](https://www.yksa.space).
 
 ## Added/planned features in this fork:
 - API address changed to use YKSA-hosted Tawhiri.
