@@ -74,6 +74,10 @@ function runPrediction(){
     if (run_settings.profile == "standard_profile"){
         run_settings.burst_altitude = parseFloat($('#burst').val());
         run_settings.descent_rate = parseFloat($('#drag').val());
+    } else if (run_settings.profile == "custom_profile") {
+        run_settings.burst_altitude = parseFloat($('#burst').val());
+        run_settings.ascent_curve = btoa($('#ascent_curve').val().trim())
+        run_settings.descent_curve = btoa($('#descent_curve').val().trim())
     } else {
         run_settings.float_altitude = parseFloat($('#burst').val());
         run_settings.stop_datetime = launch_time.add(1, 'days').format();
@@ -97,7 +101,12 @@ function runPrediction(){
     if (run_settings.profile == "standard_profile"){
         url.searchParams.set('burst_altitude', run_settings.burst_altitude);
         url.searchParams.set('descent_rate', run_settings.descent_rate);
-    } else {
+    } else if (run_settings.profile == "custom_profile") {
+        url.searchParams.set('burst_altitude', run_settings.burst_altitude);
+        url.searchParams.set('ascent_curve', run_settings.ascent_curve)
+        url.searchParams.set('descent_curve', run_settings.descent_curve)
+    } 
+    else {
         url.searchParams.set('float_altitude', run_settings.float_altitude);
     }
 
@@ -118,7 +127,7 @@ function runPrediction(){
 // Habitat Tawhiri Instance
 //var tawhiri_api = "https://predict.cusf.co.uk/api/v1/";
 // Sondehub Tawhiri Instance
-var tawhiri_api = "https://api.v2.sondehub.org/tawhiri";
+var tawhiri_api = "https://api.tawhiri.stratoflights.yktaero.space/api/v2/";
 // Approximately how many hours into the future the model covers.
 var MAX_PRED_HOURS = 169;
 
@@ -247,9 +256,33 @@ function processTawhiriResults(data, settings){
 
 }
 
+function formatDate(isoString) {
+    var date = new Date(isoString);
+  
+    var year = date.getFullYear();
+    var month = ('0' + (date.getMonth() + 1)).slice(-2); // Months are zero-based
+    var day = ('0' + date.getDate()).slice(-2);
+  
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var ampm = 'AM';
+  
+    if (hours >= 12) {
+      ampm = 'PM';
+      if (hours > 12) hours -= 12;
+    } else if (hours === 0) {
+      hours = 12;
+    }
+  
+    var formattedTime = hours + ':' + ('0' + minutes).slice(-2) + ampm;
+  
+    return year + '-' + month + '-' + day + ' ' + formattedTime;
+}
+
 function parsePrediction(prediction){
     // Convert a prediction in the Tawhiri API format to a Polyline.
 
+    var altitudes = [];
     var flight_path = [];
     var launch = {};
     var burst = {};
@@ -268,6 +301,7 @@ function parsePrediction(prediction){
         }
 
         flight_path.push([_lat, _lon, item.altitude]);
+        altitudes.push([formatDate(item.datetime), item.altitude]);
     });
 
     // Add the Descent or Float track to the flight path array.
@@ -280,7 +314,26 @@ function parsePrediction(prediction){
         }
 
         flight_path.push([_lat, _lon, item.altitude]);
+        altitudes.push([formatDate(item.datetime), item.altitude]);
     });
+ 
+    plot = $.jqplot('altitude-chart', [altitudes], {
+        title:'Altitude chart',
+        axes:{
+            xaxis:{
+                renderer:$.jqplot.DateAxisRenderer
+            }
+        },
+        cursor: {
+            zoom:true, 
+            looseZoom: true, 
+            constrainOutsideZoom: false
+        }
+    });
+
+    $("#altitude-chart-reset-zoom").click(function() {
+        plot.resetZoom();
+    })
 
     // Populate the launch, burst and landing points
     var launch_obj = ascent[0];

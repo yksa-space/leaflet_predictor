@@ -1,25 +1,59 @@
-# CUSF Landing Predictor - Tawhiri / Leaflet Version
+# T&#257;whirim&#257;tea
 
-Cambridge University Spaceflight landing predictor - a web-based tool for predicting the flight path and landing location of latex meteorological sounding balloons. 
+[![Documentation Status](https://readthedocs.org/projects/tawhiri/badge/?version=latest)](https://readthedocs.org/projects/tawhiri/?badge=latest)
 
-This fork of the [original predictor](https://github.com/jonsowman/cusf-standalone-predictor) contains a continuation of the original CUSF predictor, which utilises the [Tawhiri API](https://github.com/projecthorus/tawhiri/), and also uses Leaflet for mapping instead of Google Maps. 
+# YKSA Edition:
+- Custom flight profile (Define diffrent ascent and descent rates per altitude)
+- Prediction altitude per datetime graph
+- Tawhiri API [YKSA Edition][1] required
 
-A live version of the predictor intended for non-commercial use is available at http://predict.sondehub.org/ , hosted by the [Sondehub project](https://github.com/projecthorus/sondehub-infra/wiki).
 
-If hosting this yourself, please note that it uses the Sondehub-hosted instance of Tawhiri. Please [contact us](https://github.com/projecthorus/sondehub-infra/wiki#contacts) to discuss fair usage of this API.
+## Introduction
+
+Tawhiri is the name given to the next version of the CUSF Landing Prediction
+Software, which will probably be different enough from the current version
+(see below) to warrant a new name.
+
+The name comes from a
+[M&#257;ori](http://en.wikipedia.org/wiki/M%C4%81ori_people)
+god of weather, which rather aptly
+&ldquo;drove Tangaroa and his progeny into the sea &rdquo;
+[(WP)](http://en.wikipedia.org/wiki/Tawhiri).
+
+## More information
+
+Please see the [CUSF wiki](http://www.cusf.co.uk/wiki/), which contains pages
+on [Tawhiri](http://www.cusf.co.uk/wiki/tawhiri:start) and [prediction in
+general](http://www.cusf.co.uk/wiki/landing_predictor).
+
+[More detailed API and setup documentation](http://tawhiri.cusf.co.uk/).
+
+## Setup
+
+### Predictor
+
+…is written for Python 3, is compatible with Python 2, and needs Cython:
+
+```bash
+$ virtualenv venv
+$ source venv/bin/activate
+$ pip install -r requirements.txt
+$ python setup.py build_ext --inplace
+```
+
+The last line (re-)builds the Cython extensions, and needs to be run again
+after modifying any `.pyx` files.
+
+
+### Downloader
+
+The downloader was written before Python had good cooperative concurrency
+support, and so is instead a [separate
+application](https://github.com/cuspaceflight/tawhiri-downloader) in OCaml.
 
 ## License
 
-This work is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or any later version. This work is distributed in the hope that it will be useful, but without any warranty; without even the implied warranty of merchantability or fitness for a particular purpose.  
+Tawhiri is Copyright 2014 (see AUTHORS & individual files) and licensed under
+the [GNU GPL 3](http://gplv3.fsf.org/) (see LICENSE).
 
-## Credits & Acknowledgments
-Credit as detailed in individual files, but notably:  
-
-* Rich Wareham - The new predictor and the hourly predictor system  
-* Fergus Noble, Ed Moore and many others  
-* Adam Grieg
-* Jon Sowman
-
-Work to switch the predictor across to Tawhiri, and addition of other features by:
-* Mark Jessop - <vk5qi@rfhead.net>
-
+[1]: https://github.com/YKSA-Sakha-Aerospace-Systems/tawhiri
