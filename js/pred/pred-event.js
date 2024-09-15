@@ -38,6 +38,7 @@ function EH_BurstCalc() {
     });
     $("#show-altitude-chart").click(function() {
         $("#altitude-chart-wrapper").show();
+        drawAltitudeChart();
     });
     $("#burst-calc-show").hover(
         function() {
