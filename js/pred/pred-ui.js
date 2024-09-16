@@ -14,6 +14,7 @@
 // Initialise the UI - this must be called on document ready
 function initUI() {
     $.jqplot.config.enablePlugins = true;
+    window.altitude_chart_data = []
 
     // Make UI elements such as windows draggable
     $("#input_form").draggable({containment: '#map_canvas', handle:

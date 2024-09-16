@@ -316,24 +316,9 @@ function parsePrediction(prediction){
         flight_path.push([_lat, _lon, item.altitude]);
         altitudes.push([formatDate(item.datetime), item.altitude]);
     });
- 
-    plot = $.jqplot('altitude-chart', [altitudes], {
-        title:'Altitude chart',
-        axes:{
-            xaxis:{
-                renderer:$.jqplot.DateAxisRenderer
-            }
-        },
-        cursor: {
-            zoom:true, 
-            looseZoom: true, 
-            constrainOutsideZoom: false
-        }
-    });
 
-    $("#altitude-chart-reset-zoom").click(function() {
-        plot.resetZoom();
-    })
+    window.altitude_chart_data = altitudes;
+    drawAltitudeChart();
 
     // Populate the launch, burst and landing points
     var launch_obj = ascent[0];
@@ -370,6 +355,30 @@ function parsePrediction(prediction){
     var flight_time = landing.datetime.diff(launch.datetime, 'seconds');
 
     return {'flight_path': flight_path, 'launch': launch, 'burst': burst, 'landing':landing, 'profile': profile, 'flight_time': flight_time};
+}
+
+function drawAltitudeChart() {
+    plot = $.jqplot('altitude-chart', [window.altitude_chart_data], {
+        title:'Altitude chart',
+        axes:{
+            xaxis:{
+                renderer:$.jqplot.DateAxisRenderer
+            }
+        },
+        cursor: {
+            zoom:true, 
+            looseZoom: true, 
+            constrainOutsideZoom: false
+        }
+    });
+
+    if ($(document.getElementById('altitude-chart')).is(':visible')) {
+        plot.resetZoom();
+    }
+
+    $("#altitude-chart-reset-zoom").click(function() {
+        plot.resetZoom();
+    });
 }
 
 function plotStandardPrediction(prediction){
