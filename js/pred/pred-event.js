@@ -13,176 +13,234 @@
  */
 
 function setupEventHandlers() {
-    EH_LaunchCard();
-    EH_BurstCalc();
-    EH_NOTAMSettings();
-    EH_ScenarioInfo();
-    EH_LocationSave();
+  EH_LaunchCard();
+  EH_BurstCalc();
+  EH_NOTAMSettings();
+  EH_ScenarioInfo();
+  EH_LocationSave();
 
-    // Tipsylink tooltip class activation
-    $(".tipsyLink").tipsy({fade: true});
+  // Tipsylink tooltip class activation
+  $(".tipsyLink").tipsy({ fade: true });
 
-    // Add the onmove event handler to the map canvas
-    map.on('mousemove', function(event) {
-        showMousePos(event.latlng);
+  function updateIndexes() {
+    $("#input-column .input-profile-row").each(function (index) {
+      $(this)
+        .find(".index")
+        .text(index + 1); // Update the index display
     });
+  }
+
+  $("#add-new-point").click(function () {
+    $("#input-column").append(`
+      <div class="input-profile-row">
+          <span class="index"></span>
+          <input type="number" name="altitude[]" placeholder="Enter Altitude">
+          <input type="number" name="rate[]" placeholder="Enter Rate">
+          <input type="number" name="time[]">
+          <button type="button" class="remove-row">X</button>
+      </div>
+  `);
+    updateIndexes(); // Update indexes after adding a new row
+  });
+
+  $(document).on("click", ".remove-row", function () {
+    $(this).closest(".input-profile-row").remove();
+    updateIndexes(); // Update indexes after removing a row
+  });
+
+  updateIndexes();
+
+  // Add the onmove event handler to the map canvas
+  map.on("mousemove", function (event) {
+    showMousePos(event.latlng);
+  });
 }
 
 function EH_BurstCalc() {
-    // Activate the "use burst calc" links
-    $("#burst-calc-show").click(function() {
-        $("#burst-calc-wrapper").show();
+  // Activate the "use burst calc" links
+  $("#burst-calc-show").click(function () {
+    $("#burst-calc-wrapper").show();
+  });
+  $("#define-custom-profile").click(function () {
+    $("#define-custom-profile-wrapper").show();
+  });
+  $("#show-altitude-chart").click(function () {
+    $("#altitude-chart-wrapper").show();
+    drawAltitudeChart();
+  });
+  $("#burst-calc-show").hover(
+    function () {
+      $("#ascent,#burst").css("background-color", "#AACCFF");
+    },
+    function () {
+      $("#ascent,#burst").css("background-color", "");
+    }
+  );
+  $("#burst-calc-use").click(function () {
+    // Write the ascent rate and burst altitude to the launch card
+    $("#ascent").val($("#ar").html());
+    $("#burst").val($("#ba").html());
+    $("#burst-calc-wrapper").hide();
+  });
+  $("#burst-calc-close").click(function () {
+    // Close the burst calc without doing anything
+    $("#burst-calc-wrapper").hide();
+    $("#modelForm").show();
+  });
+  $("#define-custom-profile-close").click(function () {
+    $("#define-custom-profile-wrapper").hide();
+  });
+  $("#altitude-chart-close").click(function () {
+    $("#altitude-chart-wrapper").hide();
+  });
+  $("#burst-calc-advanced-show").click(function () {
+    // Show the burst calculator constants
+    // We use a callback function to fade in the new content to make
+    // sure the old content has gone, in order to create a smooth effect
+    $("#burst-calc").fadeOut("fast", function () {
+      $("#burst-calc-constants").fadeIn();
     });
-    $("#define-custom-profile").click(function() {
-        $("#define-custom-profile-wrapper").show();
+  });
+  $("#burst-calc-advanced-hide").click(function () {
+    // Show the burst calculator constants
+    $("#burst-calc-constants").fadeOut("fast", function () {
+      $("#burst-calc").fadeIn();
     });
-    $("#show-altitude-chart").click(function() {
-        $("#altitude-chart-wrapper").show();
-        drawAltitudeChart();
-    });
-    $("#burst-calc-show").hover(
-        function() {
-            $("#ascent,#burst").css("background-color", "#AACCFF");
-        },
-        function() {
-            $("#ascent,#burst").css("background-color", "");
-        });
-    $("#burst-calc-use").click(function() {
-        // Write the ascent rate and burst altitude to the launch card
-        $("#ascent").val($("#ar").html());
-        $("#burst").val($("#ba").html());
-        $("#burst-calc-wrapper").hide();
-    });
-    $("#burst-calc-close").click(function() {
-        // Close the burst calc without doing anything
-        $("#burst-calc-wrapper").hide();
-        $("#modelForm").show();
-    });
-    $("#define-custom-profile-close").click(function() {
-        $("#define-custom-profile-wrapper").hide();
-    })
-    $("#altitude-chart-close").click(function() {
-        $("#altitude-chart-wrapper").hide();
-    })
-    $("#burst-calc-advanced-show").click(function() {
-        // Show the burst calculator constants
-        // We use a callback function to fade in the new content to make
-        // sure the old content has gone, in order to create a smooth effect
-        $("#burst-calc").fadeOut('fast', function() {
-            $("#burst-calc-constants").fadeIn();
-        });
-    });
-    $("#burst-calc-advanced-hide").click(function() {
-        // Show the burst calculator constants
-        $("#burst-calc-constants").fadeOut('fast', function() {
-            $("#burst-calc").fadeIn();
-        });
-    });
+  });
 }
 
 function EH_NOTAMSettings() {
-    // Activate the checkbox 
-    $("#notam-display").click(function() {
-        if (document.modelForm.notams.checked){
-            if (kmlLayer == null) kmlLayer = new google.maps.KmlLayer('http://www.habhub.org/kml_testing/notam_and_restrict.kml', {preserveViewport: true});
-            kmlLayer.setMap(map);
-	}
-	else {
-	    kmlLayer.setMap(null);
-	}
-    });
-    // Activate the "notam settings" links
-    $("#notam-settings-show").click(function() {
-        $("#notam-settings-wrapper").show();
-    });
-    $("#notam-settings-close").click(function() {
-        // Close the notam settings doing anything
-        $("#notam-settings-wrapper").hide();
-        $("#modelForm").show();
-    });
+  // Activate the checkbox
+  $("#notam-display").click(function () {
+    if (document.modelForm.notams.checked) {
+      if (kmlLayer == null)
+        kmlLayer = new google.maps.KmlLayer(
+          "http://www.habhub.org/kml_testing/notam_and_restrict.kml",
+          { preserveViewport: true }
+        );
+      kmlLayer.setMap(map);
+    } else {
+      kmlLayer.setMap(null);
+    }
+  });
+  // Activate the "notam settings" links
+  $("#notam-settings-show").click(function () {
+    $("#notam-settings-wrapper").show();
+  });
+  $("#notam-settings-close").click(function () {
+    // Close the notam settings doing anything
+    $("#notam-settings-wrapper").hide();
+    $("#modelForm").show();
+  });
 }
 
 function EH_LaunchCard() {
-    // Activate the "Set with Map" link
-    $("#setWithClick").click(function() {
-        setLatLonByClick(true);
-    });
-    $("#setWithClick,#req_open").hover(
-        function() {
-            $("#lat,#lon").css("background-color", "#AACCFF");
-        },
-        function() {
-            $("#lat,#lon").css("background-color", "");
-        });
-    // Launch card parameter onchange event handlers
-    $("#lat").change(function() {
-        plotClick();
-    });
-    $("#lon").change(function() {
-        plotClick();
-    });
+  // Activate the "Set with Map" link
+  $("#setWithClick").click(function () {
+    setLatLonByClick(true);
+  });
+  $("#setWithClick,#req_open").hover(
+    function () {
+      $("#lat,#lon").css("background-color", "#AACCFF");
+    },
+    function () {
+      $("#lat,#lon").css("background-color", "");
+    }
+  );
+  // Launch card parameter onchange event handlers
+  $("#lat").change(function () {
+    plotClick();
+  });
+  $("#lon").change(function () {
+    plotClick();
+  });
 
-    $("#site").change(function() {
-        changeLaunchSite();
-    });
+  $("#site").change(function () {
+    changeLaunchSite();
+  });
 }
 
 function EH_ScenarioInfo() {
-    // Controls in the Scenario Information window
-    $("#showHideDebug").click(function() {
-        toggleWindow("scenario_template", "showHideDebug", "Show Debug", "Hide Debug");
-    });
-    $("#showHideDebug_status").click(function() {
-        toggleWindow("scenario_template", "showHideDebug", "Show Debug", "Hide Debug");
-    });
-    $("#showHideForm").click(function() {
-        toggleWindow("input_form", "showHideForm", "Show Launch Card",
-            "Hide Launch Card");
-    });
-    $("#closeErrorWindow").click(function() {
-        $("#error_window").fadeOut();
-    });
+  // Controls in the Scenario Information window
+  $("#showHideScenario").click(function () {
+    toggleWindow(
+      "scenario_info",
+      "showHideScenario",
+      "Show Scenario",
+      "Hide Scenario",
+      undefined,
+      "right"
+    );
+  });
+  $("#showHideDebug").click(function () {
+    toggleWindow(
+      "scenario_template",
+      "showHideDebug",
+      "Show Debug",
+      "Hide Debug"
+    );
+  });
 
-    $("#about_window_show").click(function() {
-        $("#about_window").dialog({
-            modal:true,
-            width:600,
-            height: $(document).height() - 200,
-            buttons: {
-                Close: function() {
-                        $(this).dialog('close');
-                    }
-            }
-        });
+  $("#showHideDebug_status").click(function () {
+    toggleWindow(
+      "scenario_template",
+      "showHideDebug",
+      "Show Debug",
+      "Hide Debug"
+    );
+  });
+  $("#showHideForm").click(function () {
+    toggleWindow(
+      "input_form",
+      "showHideForm",
+      "Show Launch Card",
+      "Hide Launch Card"
+    );
+  });
+  $("#closeErrorWindow").click(function () {
+    $("#error_window").fadeOut();
+  });
+
+  $("#about_window_show").click(function () {
+    $("#about_window").dialog({
+      modal: true,
+      width: 600,
+      height: $(document).height() - 200,
+      buttons: {
+        Close: function () {
+          $(this).dialog("close");
+        },
+      },
     });
+  });
 }
 
 function EH_LocationSave() {
-    // Location saving to cookies event handlers
-    $("#req_sub_btn").click(function() {
-        saveLocationToCookie();
-    });
-    $("#cookieLocations").click(function() {
-        appendDebug("User requested locally saved launch sites");
-        if ( constructCookieLocationsTable("cusf_predictor") ) {
-            $("#location_save_local").fadeIn();
-        }
-    });
-    $("#req_open").click(function() {
-            var lat = $("#lat").val();
-            var lon = $("#lon").val();
-            $("#req_lat").val(lat);
-            $("#req_lon").val(lon);
-            $("#req_alt").val($("#initial_alt").val());
-            appendDebug("Trying to reverse geo-code the launch point");
-            // No Leaflet geocode equivalent, so commenting this out for now.
-            //rvGeocode(lat, lon, "req_name");
-            $("#location_save").fadeIn();
-    })
-    $("#req_close").click(function() {
-            $("#location_save").fadeOut();
-    });
-    $("#locations_close").click(function() {
-            $("#location_save_local").fadeOut();
-    });
+  // Location saving to cookies event handlers
+  $("#req_sub_btn").click(function () {
+    saveLocationToCookie();
+  });
+  $("#cookieLocations").click(function () {
+    appendDebug("User requested locally saved launch sites");
+    if (constructCookieLocationsTable("cusf_predictor")) {
+      $("#location_save_local").fadeIn();
+    }
+  });
+  $("#req_open").click(function () {
+    var lat = $("#lat").val();
+    var lon = $("#lon").val();
+    $("#req_lat").val(lat);
+    $("#req_lon").val(lon);
+    $("#req_alt").val($("#initial_alt").val());
+    appendDebug("Trying to reverse geo-code the launch point");
+    // No Leaflet geocode equivalent, so commenting this out for now.
+    //rvGeocode(lat, lon, "req_name");
+    $("#location_save").fadeIn();
+  });
+  $("#req_close").click(function () {
+    $("#location_save").fadeOut();
+  });
+  $("#locations_close").click(function () {
+    $("#location_save_local").fadeOut();
+  });
 }
