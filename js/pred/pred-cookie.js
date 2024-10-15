@@ -37,8 +37,8 @@ function saveLocationToCookie() {
 
     if ( $.Jookie.Get(cookie_name, "idx") >= locations_limit ) {
         $("#location_save").fadeOut();
-        throwError("You may only save " + locations_limit 
-                + " locations - please delete some.");
+        throwError("Возможно сохранить только " + locations_limit 
+                + " точек - пожалуйста, удалите лишние.");
     } else {
         // Find the next free index we can use
         var i=1;
@@ -72,20 +72,20 @@ t += "<table border='0'>";
 
 $.Jookie.Initialise(cookie_name, 99999999);
 if ( !$.Jookie.Get(cookie_name, "idx") || $.Jookie.Get(cookie_name, "idx") == 0 ) {
-    throwError("You haven't saved any locations yet. Please click Save Location to do so.");
+    throwError("У вас нет сохраненных точек старта.");
     return false;
 } else {
     idx = $.Jookie.Get(cookie_name, "idx");
-    t += "<tr style='font-weight:bold'><td>Name</td><td>Use</td><td>Delete</td></tr>";
+    t += "<tr style='font-weight:bold'><td>Название</td><td>Выбрать</td><td>Удалить</td></tr>";
     var i=1;
     var j=0;
     while ( j<idx ) {
         if ( $.Jookie.Get(cookie_name, i+"_name") ) {
             t += "<tr>";
             t += "<td>"+$.Jookie.Get(cookie_name, i+"_name")+"</td><td>";
-            t += "<a id='"+i+"_usethis' onClick='setCookieLatLng(\""+cookie_name+"\", \""+i+"\")'>Use</a>";
+            t += "<a id='"+i+"_usethis' onClick='setCookieLatLng(\""+cookie_name+"\", \""+i+"\")'>Выбрать</a>";
             t += "</td><td>";
-            t += "<a id='"+i+"_usethis' onClick='deleteCookieLocation(\""+cookie_name+"\", \""+i+"\")'>Delete</a>";
+            t += "<a id='"+i+"_usethis' onClick='deleteCookieLocation(\""+cookie_name+"\", \""+i+"\")'>Удалить</a>";
             t += "</td>";
             t += "</tr>";
             j++;
