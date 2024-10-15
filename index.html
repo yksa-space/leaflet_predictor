@@ -40,46 +40,46 @@
 <!-- Debug window -->
 <div id="scenario_template" class="box ui-corner-all">
     <div id="scenario_template_scroller">
-    <h1>Debug Window</h1>
-    <span id="debuginfo">No Messages</span>
+    <h1>Отладочные сообщения</h1>
+    <span id="debuginfo">Нет сообщений</span>
     </div>
     </div>
     
     <!-- Prediction progress window -->
     <div id="status_message" class="box ui-corner-all">
         <span id="prediction_status"></span><br>
-        <a><span id="showHideDebug_status">Toggle Debug</span></a>
+        <a><span id="showHideDebug_status">Вкл/выкл отладку</span></a>
     </div>
     
     <!-- Error window -->
     <div id="error_window" class="box ui-corner-all">
-        <span id="error_message">Nothing here!</span>
+        <span id="error_message">Пустое сообщение.</span>
         <br /><br />
-        <a id="closeErrorWindow">Close</a>
+        <a id="closeErrorWindow">Закрыть</a>
     </div>
 
 <!-- Scenario information -->
 <div id="scenario_info" class="box ui-corner-all">
     <img src="images/drag_handle.png" class="handle" />
-    <h1>Scenario Information</h1>
-    <span id="cursor_info">Current mouse position: 
-        Lat: <span id="cursor_lat">?</span> 
-        Lon: <span id="cursor_lon">?</span>
+    <h1>Информация о сценарии</h1>
+    <span id="cursor_info">Позиция курсора: 
+        Шир.: <span id="cursor_lat">?</span> 
+        Долг.: <span id="cursor_lon">?</span>
     </span><br />
     <span id="cursor_pred" style="display:none">
-        Range: <span id="cursor_pred_range"></span>km, 
-        Flight Time: <span id="cursor_pred_time"></span><br />
-        Cursor range from launch: <span id="cursor_pred_launchrange">?</span>km, 
-        land: <span id="cursor_pred_landrange">?</span>km
+        Дистанция: <span id="cursor_pred_range"></span>км, 
+        Время полета: <span id="cursor_pred_time"></span><br />
+        Дистанция от курсора до точки старта: <span id="cursor_pred_launchrange">?</span>км, 
+        приземления: <span id="cursor_pred_landrange">?</span>км
         <br />
     </span>
     <span id="cursor_pred_lastrun" style="display:none">
-        Last run at <span id="run_time">?</span> UTC using model <span id="dataset">?</span>
+        Последний раз вычислялось <span id="run_time">?</span> UTC используя набор параметров <span id="dataset">?</span>
         <br />
     </span>
     <span id="cursor_pred_links" style="display:none">
         <span class="ui-corner-all control_buttons">
-            <a class="control_button" id="panto">Pan To</a> | 
+            <a class="control_button" id="panto">Переместить карту</a> |
             <a class="control_button" id="dlcsv">CSV</a> | 
             <a class="control_button" id="dlkml">KML</a>
         </span>
@@ -91,46 +91,47 @@
 <!-- Save location to cookie -->
 <div id="location_save" class="box ui-corner-all">
     <img src="images/drag_handle.png" class="handle" />
-    <h1>Save Launch Location</h1><br />
+    <h1>Добавить точку старта</h1><br />
     <form name="location_save_form" id="location_save_form">
     <table name="req_table" id="req_table">
     <tr>
-    <td>Latitude: </td><td><input type="text" name="req_lat" id="req_lat" size="15"></td>
+    <td>Широта: </td><td><input type="text" name="req_lat" id="req_lat" size="15"></td>
     </tr><tr>
-    <td>Longitude: </td><td><input type="text" name="req_lon" id="req_lon" size="15"></td>
+    <td>Долгота: </td><td><input type="text" name="req_lon" id="req_lon" size="15"></td>
     </tr><tr>
-    <td>Altitude: </td><td><input type="text" name="req_alt" id="req_alt" size="15"></td>
+    <td>Высота над ур. моря: </td><td><input type="text" name="req_alt" id="req_alt" size="15"></td>
     </tr><tr>
-    <td>Site Name: </td><td><input type="text" name="req_name" id="req_name" size="15"></td>
+    <td>Название точки: </td><td><input type="text" name="req_name" id="req_name" size="15"></td>
     </tr><tr>
-    <td></td><td><input type="button" value="Save" name="submit" id="req_sub_btn"></td>
+    <td></td><td><input type="button" value="Сохранить" name="submit" id="req_sub_btn"></td>
     </tr>
     </table>
     </form><br />
-    <a id="req_close">Close this window</a>
+    <a id="req_close">Закрыть окно</a>
 </div>
 
 <!-- View saved locations -->
 <div id="location_save_local" class="box ui-corner-all">
     <img src="images/drag_handle.png" class="handle" />
-    <b>Saved Locations</b><br />
+    <b>Сохраненные точки старта</b><br />
     <span id="locations_table">?</span>
     <br />
-    <a id="locations_close">Close this window</a>
+    <a id="locations_close">Закрыть окно</a>
 </div>
 
 <!-- About window -->
 <div id="about_window">
     <h3>Cambridge University Spaceflight Landing Predictor - Leaflet Version (<a href="https://github.com/projecthorus/leaflet_predictor/wiki" target="_blank">github</a>)</h3>
     <p>A tool to predict the flight path and landing location of latex sounding balloons.</p>
-    <p>Written by <a href="http://github.com/jonsowman" target="_blank">Jon Sowman</a>, <a href="http://github.com/adamgreig" target="_blank">Adam Greig</a> and <a href="http://github.com/danielrichman">Daniel Richman</a> for <a href="http://www.cuspaceflight.co.uk" target="_blank">CUSF</a>.
+    <p>Sakha Aerospace Systems fork - <a href="https://github.com/yksa-space/leaflet_predictor" target="_blank">github</a></p>.
+    <p>Originally written by <a href="http://github.com/jonsowman" target="_blank">Jon Sowman</a>, <a href="http://github.com/adamgreig" target="_blank">Adam Greig</a> and <a href="http://github.com/danielrichman">Daniel Richman</a> for <a href="http://www.cuspaceflight.co.uk" target="_blank">CUSF</a>.
     Credit also to <a href="http://github.com/rjw57" target="_blank">Rich Wareham</a> for work on the predictor. Some parts of code taken from old landing prediction software, credit to Rob Anderson, Fergus Noble and Ed Moore.</p>
     <p>Work to switch to Leaflet mapping and to use the <a href="https://github.com/projecthorus/tawhiri/" target="_blank">Tawhiri API</a> by <a href="http://github.com/darksidelemm" target="_blank">Mark Jessop</a>, for the <a href="https://github.com/projecthorus/sondehub-infra/wiki" target="_blank">SondeHub</a> project.
-    The <a href="https://github.com/projecthorus/tawhiri/#sondehub-tawhiri-instance" target="_blank">Sondehub instance</a> of the Tawhiri API is available for use in non-commercial applications.
+    <p>This fork is maintained by <a href="https://www.yksa.space" target="_blank">Sakha Aerospace Systems, LLC</a>. An instance of the predictor is available at <a href="https://api.tawhiri.stratoflights.yktaero.space/api/v2/" target="_blank">api.tawhiri.stratoflights.yktaero.space/api/v2/</a> and <a href="https://tawhiri.stratoflights.yktaero.space" target="_blank">tawhiri.stratoflights.yktaero.space</a>. Note that a modified version of the predictor is used, which includes additional features and improvements.</p>
     </p>
     <p>This predictor uses data from the NOAA GFS models.</p>
     <p>No guarantee is given for the accuracy, precision or reliability of the data produced by this software, and you use it entirely at your own risk. For more information, see #highaltitude on libera.chat</p>
-    <p>This predictor is intended for <b>non-commercial use only</b>. If you are using this predictor in a commercial setting, please <a href="https://github.com/projecthorus/sondehub-amateur-tracker/wiki/Guide-for-HabHub-Users#for-commercial-users" target="_blank">read this page.</a></p>
+    <p>This predictor is intended for <b>non-commercial</b> and <b>non-military use only</b>.</p>
     <p>
         Copyright 2013 Cambridge University Space Flight
     </p>
@@ -174,8 +175,10 @@
 <div id="define-custom-profile-wrapper" class="box ui-corner-all">
     <img src="images/drag_handle.png" class="handle" />
     <div id="custom-profile">
-        <b>Custom Flight Profile</b>
-            <p>Define ascent and descent curves as CSV (#Altitude,Rate), with rate in m/s</p>
+        <b>Профили подъема/снижения</b>
+            <!-- <p>Define ascent and descent curves as CSV (#Altitude,Rate), with rate in m/s</p> -->
+            <p>Профили подъема и снижения задаются в виде наборов точек (#Время,#Высота,#Скорость). 
+            Скорость вводится в м/с, время в минутах, высота в метрах. При отсутствии ограничения по одному из параметров, введите -1.</p>
         <br>
             <!-- <p>Ascent curve:</p>
             <textarea rows=5 id="ascent_curve"></textarea>
@@ -186,51 +189,51 @@
 
         <div class="header-row">
             <div class="index">#</div>
-            <div>Altitude</div>
-            <div>Rate</div>
-            <div>Time</div>
+            <div>Высота</div>
+            <div>Скорость</div>
+            <div>Время</div>
         </div>
      
         <div id="input-column">
             <div class="input-profile-row">
                 <span class="index">1</span>
-                <input type="number" name="altitude[]" placeholder="Enter Altitude">
-                <input type="number" name="rate[]" placeholder="Enter Rate">
+                <input type="number" name="altitude[]" placeholder="Введите высоту">
+                <input type="number" name="rate[]" placeholder="Введите скорость">
                 <input type="number" name="time[]">
                 <button type="button" class="remove-row">X</button>
             </div>
         </div>
 
-        <input type="button" id="define-custom-profile-save" name="define-custom-profile-save" value="Save"/>
+        <input type="button" id="define-custom-profile-save" name="define-custom-profile-save" value="Сохранить"/>
 
-        <button id="add-new-point">Add new point</button>
+        <button id="add-new-point">Добавить точку</button>
 
-        <input type="button" id="define-custom-profile-close" name="define-custom-profile-close" value="Close"/>
+        <input type="button" id="define-custom-profile-close" name="define-custom-profile-close" value="Закрыть"/>
     </div>
 </div>
 
 <div id="altitude-chart-wrapper" class="box ui-corner-all">
     <img src="images/drag_handle.png" class="handle"/>
     <div id="custom-profile">
-        <b>Altitude chart</b>
+        <b>График высоты полета</b>
         <div id="altitude-chart" style="width: 100%;"></div>
     </div>
-    <input type="button" id="altitude-chart-reset-zoom" value="Reset zoom"/>
-    <input type="button" id="altitude-chart-close" value="Close"/>
+    <input type="button" id="altitude-chart-reset-zoom" value="Сбросить приближение"/>
+    <input type="button" id="altitude-chart-close" value="Закрыть"/>
 </div>
 
 <!-- Burst calculator window -->
 <div id="burst-calc-wrapper" class="box ui-corner-all">
     <img src="images/drag_handle.png" class="handle" />
     <div id="burst-calc">
-        <b>Burst Calculator</b>
+        <b>Расчет разрыва шара</b>
         <br>
         <table id="input_table">
             <tr class="input_row">
-                <td class="input_label" colspan="2">Payload Mass (g)</td>
+                <td class="input_label" colspan="2">Масса подвешенного груза (г)</td>
                 <td class="input_instruction" rowspan="3">AND</td>
 
-                <td class="input_label" colspan="2">Balloon Mass (g)</td>
+                <td class="input_label" colspan="2">Масса шара (г)</td>
             </tr>
             <tr class="input_row">
                 <td colspan="2">
@@ -278,13 +281,13 @@
                 <td colspan="2" id="mb_w">&nbsp;</td>
             </tr>
             <tr>
-                <td class="input_instruction" colspan="5">THEN</td>
+                <td class="input_instruction" colspan="5">ДАЛЕЕ</td>
             </tr>
             <tr class="input_row">
-                <td class="input_label" colspan="2">Target Burst Altitude (m)</td>
+                <td class="input_label" colspan="2">Желаемая высота разрыва (м)</td>
 
-                <td class="input_instruction" rowspan="3">OR</td>
-                <td class="input_label" colspan="2">Target Ascent Rate (m/s)</td>
+                <td class="input_instruction" rowspan="3">ИЛИ</td>
+                <td class="input_label" colspan="2">Желаемая скорость подъема (м/с)</td>
             </tr>
             <tr class="input_row">
                 <td colspan="2">
@@ -300,74 +303,74 @@
                 <td id="tar_w" colspan="2">&nbsp;</td>
             </tr>
             <tr class="output_row">
-                <td class="output_label">Burst Altitude:</td>
-                <td class="output_data"><span id="ba">33000</span> m</td>
+                <td class="output_label">Высота разрыва:</td>
+                <td class="output_data"><span id="ba">33000</span> м</td>
                 <td></td>
-                <td class="output_label">Ascent Rate:</td>
-                <td class="output_data"><span id="ar">2.33</span> m/s</td>
+                <td class="output_label">Скорость подъема:</td>
+                <td class="output_data"><span id="ar">2.33</span> м/с</td>
 
             </tr>
             <tr class="output_row">
-                <td class="output_label">Time to Burst:</td>
-                <td class="output_data"><span id="ttb">238</span> min</td>
+                <td class="output_label">Время до разрыва:</td>
+                <td class="output_data"><span id="ttb">238</span> мин</td>
                 <td></td>
-                <td class="output_label">Neck Lift:</td>
-                <td class="output_data"><span id="nl">1733</span> g</td>
+                <td class="output_label">Подъемная сила у основания:</td>
+                <td class="output_data"><span id="nl">1733</span> г</td>
 
             </tr>
             <tr class="output_row">
-                <td class="output_label">Launch Volume:</td>
+                <td class="output_label">Стартовый объем:</td>
                 <td class="output_data"><span id="lv_m3">2.66</span> 
-                    m<sup>3</sup></td>
+                    м<sup>3</sup></td>
                 <td></td>
-                <td class="output_data"><span id="lv_l">2660</span> L</td>
+                <td class="output_data"><span id="lv_l">2660</span> л</td>
                 <td class="output_data"><span id="lv_cf">93.9</span>
-                     ft<sup>3</sup></td>
+                     фут<sup>3</sup></td>
 
             </tr>
         </table>
         <br>
         <input type="button" id="burst-calc-advanced-show"
-            name="burst-calc-advanced-show" value="Advanced">
+            name="burst-calc-advanced-show" value="Дополнительные настройки">
         <input type="button" id="burst-calc-use" name="burst-calc-submit" 
-            value="Use Values"/ >
+            value="Использовать результаты"/ >
         <input type="button" id="burst-calc-close" name="burst-calc-submit" 
-            value="Close"/ >
+            value="Закрыть"/ >
     </div>
 
     <!-- these are the burst calc constants -->
     <div id="burst-calc-constants">
-        <div class="constants_header">Constants</div><br />
+        <div class="constants_header">Константы</div><br />
         <div class="constants_warning">
-            For advanced use only! You can probably leave these alone.
+            Осторожно! Меняйте эти константы, только если вы знаете, что делаете.
         </div><br />
-        <label class="constant_label" for="gas">Gas</label><br />
+        <label class="constant_label" for="gas">Газ</label><br />
         <select id="gas" class="constant_field">
-            <option value="he">Helium</option>
-            <option value="h">Hydrogen</option>
+            <option value="he">Гелий</option>
+            <option value="h">Водород</option>
 
-            <option value="ch4">Methane</option>
-            <option value="custom">Custom</option>
+            <option value="ch4">Метан</option>
+            <option value="custom">Свой</option>
         </select><br />
-        <label class="constant_label" for="rho_g">Gas Density (kg/m<sup>3</sup>)</label><br />
+        <label class="constant_label" for="rho_g">Плотность газа (кг/м<sup>3</sup>)</label><br />
         <input type="text" id="rho_g" value="0.1786" class="constant_field" size="9" disabled="disabled"/><br />
-        <label class="constant_label" for="rho_a">Air Density (kg/m<sup>3</sup>)</label><br />
+        <label class="constant_label" for="rho_a">Плотность воздуха (кг/м<sup>3</sup>)</label><br />
 
         <input type="text" id="rho_a" value="1.2050" class="constant_field" size="9"/><br />
-        <label class="constant_label" for="adm">Air Density Model</label><br />
+        <label class="constant_label" for="adm">Модель плотности воздуха</label><br />
         <input type="text" id="adm" value="7238.3" class="constant_field" size="9"/><br />
-        <label class="constant_label" for="ga">Gravitational<br />Acceleration (m/s<sup>2</sup>)</label><br />
+        <label class="constant_label" for="ga">Ускорение<br />свободного падения (м/с<sup>2</sup>)</label><br />
         <input type="text" id="ga" value="9.80665" class="constant_field" size="9" /><br />
-        <label class="constant_label" for="bd">Burst Diameter (m)</label><br />
+        <label class="constant_label" for="bd">Диаметр разрыва (м)</label><br />
 
         <input type="checkbox" id="bd_c" />
         <input type="text" id="bd" class="constant_field" size="9" disabled="disabled" value="7.86"/><br />
-        <label class="constant_label" for="cd">Balloon Cd</label><br />
+        <label class="constant_label" for="cd">Коэф. аэродинамического сопротивления (Cd)</label><br />
         <input type="checkbox" id="cd_c" />
         <input type="text" id="cd" class="constant_field" size="9" disabled="disabled" value="0.3"/><br />
         <br />
         <input type="button" id="burst-calc-advanced-hide" 
-            name="burst-calc-advanced-hide" value="Back">
+            name="burst-calc-advanced-hide" value="Назад">
     </div>
 </div>
 
@@ -386,7 +389,7 @@
             </tr>
         </table>
         <input type="button" id="notam-settings-close" name="notam-settings-submit" 
-            value="Close"/ >
+            value="Закрыть"/ >
     </div>
 </div>
 
@@ -396,10 +399,10 @@
     <form action="" id="modelForm" name="modelForm">
     <table id="launch-card">
         <tr>
-            <td>Launch Site:
+            <td>Точка старта:
                 <span>
                     <a id="cookieLocations" class="tipsyLink" 
-                        title="View your saved launch sites">Custom</a>
+                        title="Просмотреть сохраненные точки старта">Своя</a>
                 </span>
             </td>
             <td>
@@ -408,7 +411,7 @@
             </td>
         </tr>
         <tr>
-            <td>Latitude/Longitude:</td>
+            <td>Широта/Долгота:</td>
             <td>
                 <input id="lat" type="text" size="8" name="lat" value="61.6522" 
                     onKeyDown="SetSiteOther()">&nbsp;/&nbsp;
@@ -419,89 +422,89 @@
         <tr>
             <td>
                 <span><a id="setWithClick" class="tipsyLink" 
-                    title="Use the map to set your desired launch site">
-                    Set With Map</a></span>
+                    title="Указать точку старта на карте нажатием курсора">
+                    Указать на карте</a></span>
             </td>
             <td>
                 <span>
                     <a id="req_open" class="tipsyLink" 
-                        title="Save this location to a browser cookie">
-                        Save Location</a>
+                        title="Сохранить точку старта в файлах cookie">
+                        Сохранить точку</a>
                 </span>
             </td>
         </tr>
         <tr>
-            <td>Launch altitude (m):</td>
+            <td>Высота старта (м):</td>
             <td>
                 <input id="initial_alt" type="text" name="initial_alt" 
                     value="0">
             </td>
         </tr>
         <tr>
-            <td>Launch Time (UTC):</td>
+            <td>Время старта (UTC):</td>
             <td>
                     <input id="hour" type="text" name="hour" value="" maxlength="2" size="2"> :
                     <input id="min" type="text" name="min" value="" maxlength="2" size="2">
                     <input id="sec" type="hidden" name="second" value="0"></td></tr>
-                    <tr><td>Launch Date:</td><td>
+                    <tr><td>Дата старта:</td><td>
                     <input id="day" type="text" name="day" value="" maxlength="2" size="2">
                     <select id="month" name="month">
                         <!-- Hard-coding these options in. These were generated by PHP in the old code. -->
-                        <option value="1">Jan</option>
-                        <option value="2">Feb</option>
-                        <option value="3">Mar</option>
-                        <option value="4">Apr</option>
-                        <option value="5">May</option>
-                        <option value="6">Jun</option>
-                        <option value="7">Jul</option>
-                        <option value="8">Aug</option>
-                        <option value="9">Sep</option>
-                        <option value="10">Oct</option>
-                        <option value="11">Nov</option>
-                        <option value="12">Dec</option>
+                        <option value="1">Янв</option>
+                        <option value="2">Фев</option>
+                        <option value="3">Мар</option>
+                        <option value="4">Апр</option>
+                        <option value="5">Май</option>
+                        <option value="6">Июн</option>
+                        <option value="7">Июл</option>
+                        <option value="8">Авг</option>
+                        <option value="9">Сен</option>
+                        <option value="10">Окт</option>
+                        <option value="11">Ноя</option>
+                        <option value="12">Дек</option>
                     </select>
                     <input id="year" type="text" name="year" value="" maxlength="4" size="4">
             </td>
         <tr>
             <td>
-                Ascent Rate (m/s): 
+                Скорость подъема (м/с): 
             </td>
             <td><input id="ascent" type="text" name="ascent" value="5"></td>
         </tr>
         <tr>
-            <td>Burst/Float Altitude (m):</td>
+            <td>Высота разрыва/дрейфа (м):</td>
             <td><input id="burst" type="text" name="burst" value="30000"></td>
         </tr>
         <tr>
-            <td>Flight Profile:</td>
+            <td>Профиль полета:</td>
             <td><select id="flight_profile">
-                <option value="standard_profile" selected="selected">Standard</option>
-                <option value="float_profile">Float</option>
-                <option value="reverse_profile">Reverse (ascent only)</option>
-                <option value="custom_profile">Custom</option>
+                <option value="standard_profile" selected="selected">Обычный</option>
+                <option value="float_profile">Дрейф</option>
+                <option value="reverse_profile">Реверсивный (только подъем)</option>
+                <option value="custom_profile">Свой</option>
             </select></td>
         </tr>
         <tr>
             <td colspan="2">
                 <a id="burst-calc-show" class="tipsyLink"
-                    title="Use a calculator to find highlighted values">Use Burst Calculator</a>
+                    title="Вычислить подсвеченные значения при помощи калькулятора">Открыть калькулятор разрыва</a>
             </td>
         </tr>
         <tr>
             <td colspan="3">
                 <a id="define-custom-profile" class="tipsyLink"
-                    title="Define custom flight profile">Define Custom Flight Profile</a>
+                    title="Задать свой профиль подъема/снижения">Задать свой профиль полета</a>
             </td>
         </tr>
         <tr>
             <td colspan="3">
                 <a id="show-altitude-chart" class="tipsyLink"
-                    title="Show last prediction altitude chart">Show Last Prediction Altitude Chart</a>
+                    title="Показать график высоты для последнего прогноза">Показать последний график высоты</a>
             </td>
         </tr>
         <tr>
             <td>
-                Descent Rate (<a class="tipsyLink" title="At sea level">m/s</a>):
+                Скорость снижения (<a class="tipsyLink" title="At sea level">м/с</a>):
             </td>
             <td><input id="drag" type="text" name="drag" value="5"></td>
         </tr>
@@ -514,19 +517,19 @@
             </td>
         </tr> -->
         <tr>
-            <td>Prediction Type (<a class="tipsyLink" title="Information on the hourly/daily prediction functions." href="https://github.com/projecthorus/leaflet_predictor/wiki#using-the-hourlydaily-prediction-functionality" target="_blank">info</a>):</td>
+            <td>Режим прогнозированияя (<a class="tipsyLink" title="Справка о функции почасового прогнозирования" href="https://github.com/projecthorus/leaflet_predictor/wiki#using-the-hourlydaily-prediction-functionality" target="_blank">справка</a>):</td>
             <td><select id="prediction_type">
-                <option value="single" selected="selected">Single</option>
-                <option value="1_hour">Hourly</option>
-                <option value="3_hour">3-Hourly</option>
-                <option value="6_hour">6-Hourly</option>
-                <option value="12_hour">12-Hourly</option>
-                <option value="daily">Daily</option>
+                <option value="single" selected="selected">Разовый</option>
+                <option value="1_hour">Почасовой</option>
+                <option value="3_hour">Каждые 3 часа</option>
+                <option value="6_hour">Каждые 6 часов</option>
+                <option value="12_hour">Каждые 12 часов</option>
+                <option value="daily">Подневный</option>
             </select></td>
         </tr>
         <tr>
             <td></td>
-            <td><input name="submit" id="run_pred_btn" onclick="runPrediction();" value="Run Prediction">
+            <td><input name="submit" id="run_pred_btn" onclick="runPrediction();" value="Получить прогноз" readonly="readonly">
             </td>
         </tr>
     </table>

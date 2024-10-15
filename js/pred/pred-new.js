@@ -51,12 +51,12 @@ function runPrediction() {
 
   // Sanity check the launch date to see if it's not too far into the past or future.
   if (launch_time < moment.utc().subtract(12, "hours")) {
-    throwError("Launch time too old (outside of model time range).");
+    throwError("Время старта слишком далеко в прошлом (вне периода прогнозирования).");
     return;
   }
   if (launch_time > moment.utc().add(7, "days")) {
     throwError(
-      "Launch time too far into the future (outside of model time range)."
+      "Время старта слишком далеко в будущем (вне периода прогнозирования)."
     );
     return;
   }
@@ -135,7 +135,7 @@ function tawhiriRequest(settings, extra_settings) {
       })
       .fail(function (data) {
         var prediction_error =
-          "Prediction failed. Tawhiri may be under heavy load, please try again. ";
+          "Прогнозирование не удалось. Проверьте правильность ввода начальных условий. ";
         if (data.hasOwnProperty("responseJSON")) {
           prediction_error += data.responseJSON.error.description;
         }
@@ -169,13 +169,13 @@ function tawhiriRequest(settings, extra_settings) {
     } else if (settings.pred_type == "12_hour") {
       time_step = 12;
     } else {
-      throwError("Invalid time step.");
+      throwError("Недопустимый период прогнозирования.");
       return;
     }
 
     if (settings.profile != "standard_profile") {
       throwError(
-        "Hourly/Daily predictions are only available for the standard flight profile."
+        "Почасовое/подневное прогнозирование доступно только для стандартного профиля."
       );
       return;
     }
@@ -214,7 +214,7 @@ function tawhiriRequest(settings, extra_settings) {
         })
         .fail(function (data) {
           var prediction_error =
-            "Prediction failed. Tawhiri may be under heavy load, please try again. ";
+            "Прогнозирование не удалось. Проверьте правильность ввода начальных условий. ";
           if (data.hasOwnProperty("responseJSON")) {
             prediction_error += data.responseJSON.error.description;
           }
@@ -244,7 +244,7 @@ function processTawhiriResults(data, settings) {
 
   if (data.hasOwnProperty("error")) {
     // The prediction API has returned an error.
-    throwError("Predictor returned error: " + data.error.description);
+    throwError("Ошибка прогнозирования: " + data.error.description);
   } else {
     var prediction_results = parsePrediction(data.prediction);
 
@@ -366,7 +366,7 @@ function parsePrediction(prediction) {
 
 function drawAltitudeChart() {
   plot = $.jqplot("altitude-chart", [window.altitude_chart_data], {
-    title: "Altitude chart",
+    title: "График высоты полета",
     axes: {
       xaxis: {
         renderer: $.jqplot.DateAxisRenderer,
@@ -428,11 +428,11 @@ function plotStandardPrediction(prediction) {
 
   var launch_marker = L.marker(launch.latlng, {
     title:
-      "Balloon launch (" +
+      "Старт (" +
       launch.latlng.lat.toFixed(4) +
       ", " +
       launch.latlng.lng.toFixed(4) +
-      ") at " +
+      ") в " +
       launch.datetime.format("HH:mm") +
       " UTC",
     icon: launch_icon,
@@ -440,11 +440,11 @@ function plotStandardPrediction(prediction) {
 
   var land_marker = L.marker(landing.latlng, {
     title:
-      "Predicted Landing (" +
+      "Точка приземления (" +
       landing.latlng.lat.toFixed(4) +
       ", " +
       landing.latlng.lng.toFixed(4) +
-      ") at " +
+      ") в " +
       landing.datetime.format("HH:mm") +
       " UTC",
     icon: land_icon,
@@ -452,13 +452,13 @@ function plotStandardPrediction(prediction) {
 
   var pop_marker = L.marker(burst.latlng, {
     title:
-      "Balloon burst (" +
+      "Разрыв шара (" +
       burst.latlng.lat.toFixed(4) +
       ", " +
       burst.latlng.lng.toFixed(4) +
-      " at altitude " +
+      " на высоте " +
       burst.latlng.alt.toFixed(0) +
-      ") at " +
+      ") в " +
       burst.datetime.format("HH:mm") +
       " UTC",
     icon: burst_icon,
@@ -511,7 +511,7 @@ function processHourlyTawhiriResults(data, settings, current_hour) {
 
   if (data.hasOwnProperty("error")) {
     // The prediction API has returned an error.
-    throwError("Predictor returned error: " + data.error.description);
+    throwError("Ошибка прогнозирования: " + data.error.description);
   } else {
     var prediction_results = parsePrediction(data.prediction);
 
@@ -542,7 +542,7 @@ function plotMultiplePrediction(prediction, current_hour) {
   if (!map_items.hasOwnProperty("launch_marker")) {
     var launch_marker = L.marker(launch.latlng, {
       title:
-        "Balloon launch (" +
+        "Старт (" +
         launch.latlng.lat.toFixed(4) +
         ", " +
         launch.latlng.lng.toFixed(4) +
@@ -565,10 +565,10 @@ function plotMultiplePrediction(prediction, current_hour) {
     weight: 1,
     color: "#000000",
     title:
-      "<b>Launch Time: </b>" +
+      "<b>Время старта: </b>" +
       launch.datetime.format() +
       "<br/>" +
-      "Predicted Landing (" +
+      "Точка приземления (" +
       landing.latlng.lat.toFixed(4) +
       ", " +
       landing.latlng.lng.toFixed(4) +
@@ -582,18 +582,18 @@ function plotMultiplePrediction(prediction, current_hour) {
   var _kml_url = _base_url + "&format=kml";
 
   var predict_description =
-    "<b>Launch Time: </b>" +
+    "<b>Время старта: </b>" +
     launch.datetime.format() +
     "<br/>" +
-    "<b>Predicted Landing:</b> " +
+    "<b>Точка приземления:</b> " +
     landing.latlng.lat.toFixed(4) +
     ", " +
     landing.latlng.lng.toFixed(4) +
     "</br>" +
-    "<b>Landing Time: </b>" +
+    "<b>Время приземления: </b>" +
     landing.datetime.format() +
     "<br/>" +
-    '<b>Download: </b> <a href="' +
+    '<b>Скачать: </b> <a href="' +
     _kml_url +
     '" target="_blank">KML</a>  <a href="' +
     _csv_url +
@@ -694,13 +694,13 @@ function showHideHourlyPrediction(e) {
 
     var pop_marker = L.marker(burst.latlng, {
       title:
-        "Balloon burst (" +
+        "Разрыв шара (" +
         burst.latlng.lat.toFixed(4) +
         ", " +
         burst.latlng.lng.toFixed(4) +
-        " at altitude " +
+        " на высоте " +
         burst.latlng.alt.toFixed(0) +
-        ") at " +
+        ") в " +
         burst.datetime.format("HH:mm") +
         " UTC",
       icon: burst_icon,

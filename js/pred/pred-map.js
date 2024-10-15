@@ -67,7 +67,7 @@ function initMap(centre_lat, centre_lon, zoom_level) {
       var container = L.DomUtil.create("div", "leaflet-bar leaflet-control");
       var button = L.DomUtil.create("button", "control_button", container);
       button.id = "showHideForm";
-      button.innerText = "Hide Launch Card";
+      button.innerText = "Скрыть нач. условия";
       L.DomEvent.disableClickPropagation(button);
       L.DomEvent.on(button, "click", function () {
         console.log("click");
@@ -85,7 +85,7 @@ function initMap(centre_lat, centre_lon, zoom_level) {
       var container = L.DomUtil.create("div", "leaflet-bar leaflet-control");
       var button = L.DomUtil.create("button", "control_button", container);
       button.id = "showHideDebug";
-      button.innerText = "Hide Debug";
+      button.innerText = "Скрыть отладку";
       L.DomEvent.disableClickPropagation(button);
       L.DomEvent.on(button, "click", function () {
         console.log("click");
@@ -103,7 +103,7 @@ function initMap(centre_lat, centre_lon, zoom_level) {
       var container = L.DomUtil.create("div", "leaflet-bar leaflet-control");
       var button = L.DomUtil.create("button", "control_button", container);
       button.id = "showHideScenario";
-      button.innerText = "Hide Scenario";
+      button.innerText = "Скрыть сценарий";
       L.DomEvent.disableClickPropagation(button);
       L.DomEvent.on(button, "click", function () {
         console.log("click");
@@ -183,7 +183,7 @@ function plotClick() {
   });
 
   clickIconTitle =
-    "Currently selected launch location (" + click_lat + ", " + click_lon + ")";
+    "Выбранная точка старта: (" + click_lat + ", " + click_lon + ")";
 
   clickMarker = L.marker(click_pt, {
     title: clickIconTitle,
@@ -225,7 +225,7 @@ function setLatLonByClick(state) {
       });
     }
     // Tell the user what to do next
-    throwError("Now click your desired launch location on the map");
+    throwError("Нажмите на карту, чтобы выбрать место старта");
   } else if (state == false) {
     appendDebug("Removing the set with click listener");
     map.off("click", clickListener);
