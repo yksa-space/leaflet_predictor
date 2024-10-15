@@ -84,16 +84,8 @@
             <a class="control_button" id="dlkml">KML</a>
         </span>
     </span>
-    <br />
-    <span class="ui-corner-all control_buttons">
-        <a class="control_button" id="showHideDebug">Show Debug</a> | 
-        <a class="control_button" id="showHideForm">Hide Launch Card</a> |
-        <a class="control_button" id="about_window_show">About</a>
-    </span>
-    <br />
-    <span><b>Non-Commercial Use Only. Please read the 'About' page.</b></span>
-    <br />
-    <span><b>The Tawhiri engine is currently experiencing some performance issues. Please be patient!</b></span>
+ 
+
 </div>
 
 <!-- Save location to cookie -->
@@ -185,13 +177,35 @@
         <b>Custom Flight Profile</b>
             <p>Define ascent and descent curves as CSV (#Altitude,Rate), with rate in m/s</p>
         <br>
-            <p>Ascent curve:</p>
+            <!-- <p>Ascent curve:</p>
             <textarea rows=5 id="ascent_curve"></textarea>
         <br>
             <p>Descent curve:</p>
             <textarea rows=5 id="descent_curve"></textarea>
-        <br>
-        <input type="button" id="define-custom-profile-close" name="define-custom-profile-submit" value="Close"/>
+        <br> -->
+
+        <div class="header-row">
+            <div class="index">#</div>
+            <div>Altitude</div>
+            <div>Rate</div>
+            <div>Time</div>
+        </div>
+     
+        <div id="input-column">
+            <div class="input-profile-row">
+                <span class="index">1</span>
+                <input type="number" name="altitude[]" placeholder="Enter Altitude">
+                <input type="number" name="rate[]" placeholder="Enter Rate">
+                <input type="number" name="time[]">
+                <button type="button" class="remove-row">X</button>
+            </div>
+        </div>
+
+        <input type="button" id="define-custom-profile-save" name="define-custom-profile-save" value="Save"/>
+
+        <button id="add-new-point">Add new point</button>
+
+        <input type="button" id="define-custom-profile-close" name="define-custom-profile-close" value="Close"/>
     </div>
 </div>
 
@@ -396,9 +410,9 @@
         <tr>
             <td>Latitude/Longitude:</td>
             <td>
-                <input id="lat" type="text" size="8" name="lat" value="-34.0297" 
+                <input id="lat" type="text" size="8" name="lat" value="61.6522" 
                     onKeyDown="SetSiteOther()">&nbsp;/&nbsp;
-                <input id="lon" type="text" size="8" name="lon" value="138.6917" 
+                <input id="lon" type="text" size="8" name="lon" value="129.3709" 
                     onKeyDown="SetSiteOther()">
             </td>
         </tr>
