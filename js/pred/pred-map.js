@@ -85,7 +85,7 @@ function initMap(centre_lat, centre_lon, zoom_level) {
       var container = L.DomUtil.create("div", "leaflet-bar leaflet-control");
       var button = L.DomUtil.create("button", "control_button", container);
       button.id = "showHideDebug";
-      button.innerText = "Скрыть отладку";
+      button.innerText = "Показать отладку";
       L.DomEvent.disableClickPropagation(button);
       L.DomEvent.on(button, "click", function () {
         console.log("click");
