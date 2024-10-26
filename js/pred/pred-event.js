@@ -34,8 +34,8 @@ function setupEventHandlers() {
     $("#input-column").append(`
       <div class="input-profile-row">
           <span class="index"></span>
-          <input type="number" name="altitude[]" placeholder="Enter Altitude">
-          <input type="number" name="rate[]" placeholder="Enter Rate">
+          <input type="number" name="altitude[]" placeholder="Введите высоту">
+          <input type="number" name="rate[]" placeholder="Введите скорость">
           <input type="number" name="time[]">
           <button type="button" class="remove-row">X</button>
       </div>
@@ -166,8 +166,8 @@ function EH_ScenarioInfo() {
     toggleWindow(
       "scenario_info",
       "showHideScenario",
-      "Show Scenario",
-      "Hide Scenario",
+      "Показать сценарий",
+      "Скрыть сценарий",
       undefined,
       "right"
     );
@@ -176,8 +176,8 @@ function EH_ScenarioInfo() {
     toggleWindow(
       "scenario_template",
       "showHideDebug",
-      "Show Debug",
-      "Hide Debug"
+      "Показать отладку",
+      "Скрыть отладку",
     );
   });
 
@@ -185,16 +185,16 @@ function EH_ScenarioInfo() {
     toggleWindow(
       "scenario_template",
       "showHideDebug",
-      "Show Debug",
-      "Hide Debug"
+      "Показать отладку",
+      "Скрыть отладку",
     );
   });
   $("#showHideForm").click(function () {
     toggleWindow(
       "input_form",
       "showHideForm",
-      "Show Launch Card",
-      "Hide Launch Card"
+      "Показать нач. условия",
+      "Скрыть нач. условия"
     );
   });
   $("#closeErrorWindow").click(function () {
