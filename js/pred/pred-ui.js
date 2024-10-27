@@ -61,10 +61,11 @@ function initUI() {
   $("#burst-calc-advanced-show").button();
   $("#burst-calc-advanced-hide").button();
   $("#define-custom-profile-close").button();
-  $("#define-custom-profile-save").button();
+  $("define-custom-profile-toggle").button();
   $("#altitude-chart-close").button();
   $("#altitude-chart-reset-zoom").button();
-  $("#add-new-point").button();
+  $("#add-new-point-asc").button();
+  $("#add-new-point-desc").button();
 }
 
 // Throw an error window containing <data> and a 'close' link

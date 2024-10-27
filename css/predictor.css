@@ -86,7 +86,7 @@ body,
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 400px;
+  width: 800px;
   margin-left: -200px;
   margin-top: -200px;
   padding: 1em;
@@ -365,7 +365,12 @@ table#trails th {
   width: 32px;
 }
 
-#input-column {
+.input-column {
   max-height: 360px;
   overflow-y: scroll;
+}
+
+#custom-profiles {
+  display: flex;
+  gap: 1rem;
 }

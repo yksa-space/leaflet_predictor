@@ -51,7 +51,9 @@ function runPrediction() {
 
   // Sanity check the launch date to see if it's not too far into the past or future.
   if (launch_time < moment.utc().subtract(12, "hours")) {
-    throwError("Время старта слишком далеко в прошлом (вне периода прогнозирования).");
+    throwError(
+      "Время старта слишком далеко в прошлом (вне периода прогнозирования)."
+    );
     return;
   }
   if (launch_time > moment.utc().add(7, "days")) {
@@ -75,9 +77,28 @@ function runPrediction() {
     run_settings.burst_altitude = parseFloat($("#burst").val());
     run_settings.descent_rate = parseFloat($("#drag").val());
   } else if (run_settings.profile == "custom_profile") {
+    var asc = "";
+    var desc = "";
+
+    $("#asc-wrapper .input-column .input-profile-row").each(function () {
+      const altitude = $(this).find('input[name="altitude[]"]').val() || "";
+      const rate = $(this).find('input[name="rate[]"]').val() || "";
+      const time = $(this).find('input[name="time[]"]').val() || "";
+
+      asc += `${altitude},${rate},${time}\n`;
+    });
+
+    $("#desc-wrapper .input-column .input-profile-row").each(function () {
+      const altitude = $(this).find('input[name="altitude[]"]').val() || "";
+      const rate = $(this).find('input[name="rate[]"]').val() || "";
+      const time = $(this).find('input[name="time[]"]').val() || "";
+
+      desc += `${altitude},${rate},${time}\n`;
+    });
+
     run_settings.burst_altitude = parseFloat($("#burst").val());
-    run_settings.ascent_curve = btoa($("#ascent_curve").val().trim());
-    run_settings.descent_curve = btoa($("#descent_curve").val().trim());
+    run_settings.ascent_curve = btoa(asc);
+    run_settings.descent_curve = btoa(desc);
   } else {
     run_settings.float_altitude = parseFloat($("#burst").val());
     run_settings.stop_datetime = launch_time.add(1, "days").format();
