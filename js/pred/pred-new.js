@@ -81,17 +81,17 @@ function runPrediction() {
     var desc = "";
 
     $("#asc-wrapper .input-column .input-profile-row").each(function () {
-      const time = $(this).find('input[name="time[]"]').val() || "";
-      const altitude = $(this).find('input[name="altitude[]"]').val() || "";
-      const rate = $(this).find('input[name="rate[]"]').val() || "";
+      const time = $(this).find('input[name="time[]"]').val() || -1;
+      const altitude = $(this).find('input[name="altitude[]"]').val() || -1;
+      const rate = $(this).find('input[name="rate[]"]').val() || -1;
 
       asc += `${time},${altitude},${rate}\n`;
     });
 
     $("#desc-wrapper .input-column .input-profile-row").each(function () {
-      const time = $(this).find('input[name="time[]"]').val() || "";
-      const altitude = $(this).find('input[name="altitude[]"]').val() || "";
-      const rate = $(this).find('input[name="rate[]"]').val() || "";
+      const time = $(this).find('input[name="time[]"]').val() || -1;
+      const altitude = $(this).find('input[name="altitude[]"]').val() || -1;
+      const rate = $(this).find('input[name="rate[]"]').val() || -1;
 
       desc += `${time},${altitude},${rate}\n`;
     });
