@@ -23,21 +23,40 @@ function setupEventHandlers() {
   $(".tipsyLink").tipsy({ fade: true });
 
   function updateIndexes() {
-    $("#input-column .input-profile-row").each(function (index) {
+    $("#asc-wrapper .input-column .input-profile-row").each(function (index) {
+      $(this)
+        .find(".index")
+        .text(index + 1); // Update the index display
+    });
+
+    $("#desc-wrapper .input-column .input-profile-row").each(function (index) {
       $(this)
         .find(".index")
         .text(index + 1); // Update the index display
     });
   }
 
-  $("#add-new-point").click(function () {
-    $("#input-column").append(`
+  $("#add-new-point-asc").click(function () {
+    $("#asc-wrapper .input-column").append(`
       <div class="input-profile-row">
           <span class="index"></span>
-          <input type="number" name="altitude[]" placeholder="Введите высоту">
-          <input type="number" name="rate[]" placeholder="Введите скорость">
-          <input type="number" name="time[]">
+          <input type="number" name="time[]" placeholder="Высота" value="-1" />
+          <input type="number" name="altitude[]" placeholder="Высота" value="-1" />
+          <input type="number" name="rate[]" placeholder="Скорость" value="-1" />
           <button type="button" class="remove-row">X</button>
+      </div>
+  `);
+    updateIndexes(); // Update indexes after adding a new row
+  });
+
+  $("#add-new-point-desc").click(function () {
+    $("#desc-wrapper .input-column").append(`
+      <div class="input-profile-row">
+        <span class="index"></span>
+        <input type="number" name="time[]" placeholder="Высота" value="-1" />
+        <input type="number" name="altitude[]" placeholder="Высота" value="-1" />
+        <input type="number" name="rate[]" placeholder="Скорость" value="-1" />
+        <button type="button" class="remove-row">X</button>
       </div>
   `);
     updateIndexes(); // Update indexes after adding a new row
@@ -177,7 +196,7 @@ function EH_ScenarioInfo() {
       "scenario_template",
       "showHideDebug",
       "Показать отладку",
-      "Скрыть отладку",
+      "Скрыть отладку"
     );
   });
 
@@ -186,7 +205,7 @@ function EH_ScenarioInfo() {
       "scenario_template",
       "showHideDebug",
       "Показать отладку",
-      "Скрыть отладку",
+      "Скрыть отладку"
     );
   });
   $("#showHideForm").click(function () {
