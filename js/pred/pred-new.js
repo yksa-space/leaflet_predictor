@@ -81,19 +81,19 @@ function runPrediction() {
     var desc = "";
 
     $("#asc-wrapper .input-column .input-profile-row").each(function () {
+      const time = $(this).find('input[name="time[]"]').val() || "";
       const altitude = $(this).find('input[name="altitude[]"]').val() || "";
       const rate = $(this).find('input[name="rate[]"]').val() || "";
-      const time = $(this).find('input[name="time[]"]').val() || "";
 
-      asc += `${altitude},${rate},${time}\n`;
+      asc += `${time},${altitude},${rate}\n`;
     });
 
     $("#desc-wrapper .input-column .input-profile-row").each(function () {
+      const time = $(this).find('input[name="time[]"]').val() || "";
       const altitude = $(this).find('input[name="altitude[]"]').val() || "";
       const rate = $(this).find('input[name="rate[]"]').val() || "";
-      const time = $(this).find('input[name="time[]"]').val() || "";
 
-      desc += `${altitude},${rate},${time}\n`;
+      desc += `${time},${altitude},${rate}\n`;
     });
 
     run_settings.burst_altitude = parseFloat($("#burst").val());

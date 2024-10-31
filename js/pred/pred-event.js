@@ -40,9 +40,9 @@ function setupEventHandlers() {
     $("#asc-wrapper .input-column").append(`
       <div class="input-profile-row">
           <span class="index"></span>
-          <input type="number" name="altitude[]" placeholder="Введите высоту">
-          <input type="number" name="rate[]" placeholder="Введите скорость">
-          <input type="number" name="time[]">
+          <input type="number" name="time[]" placeholder="Высота" value="-1" />
+          <input type="number" name="altitude[]" placeholder="Высота" value="-1" />
+          <input type="number" name="rate[]" placeholder="Скорость" value="-1" />
           <button type="button" class="remove-row">X</button>
       </div>
   `);
@@ -52,11 +52,11 @@ function setupEventHandlers() {
   $("#add-new-point-desc").click(function () {
     $("#desc-wrapper .input-column").append(`
       <div class="input-profile-row">
-          <span class="index"></span>
-          <input type="number" name="altitude[]" placeholder="Введите высоту">
-          <input type="number" name="rate[]" placeholder="Введите скорость">
-          <input type="number" name="time[]">
-          <button type="button" class="remove-row">X</button>
+        <span class="index"></span>
+        <input type="number" name="time[]" placeholder="Высота" value="-1" />
+        <input type="number" name="altitude[]" placeholder="Высота" value="-1" />
+        <input type="number" name="rate[]" placeholder="Скорость" value="-1" />
+        <button type="button" class="remove-row">X</button>
       </div>
   `);
     updateIndexes(); // Update indexes after adding a new row
