@@ -27,39 +27,39 @@ function set_error(id, error) {
 
 function sanity_check_inputs(mb, mp, mp_set, tar, tba, tar_set, tba_set) {
     if(tar_set && tba_set) {
-        set_error('tar', "Can't specify both!");
-        set_error('tba', "Can't specify both!");
+        set_error('tar', "Нельзя указывать оба значения.");
+        set_error('tba', "Нельзя указывать оба значения.");
         return 1;
     } else if(!tar_set && !tba_set) {
-        set_error('tar', "Must specify at least one!");
-        set_error('tba', "Must specify at least one!");
+        set_error('tar', "Необходимо указать хотя бы одно значение.");
+        set_error('tba', "Необходимо указать хотя бы одно значение.");
         return 1;
     }
 
     if(tar_set && tar < 0) {
-        set_error('tar', "Can't be negative!");
+        set_error('tar', "Скорость должна быть положительной.");
         return 1;
     } else if(tar_set && tar > 10) {
-        set_error('tar', "Too large! (> 10m/s)");
+        set_error('tar', "Слишком быстро. (> 10 м/с)");
         return 1;
     }
 
     if(tba_set && tba < 10000) {
-        set_error('tba', "Too low! (< 10km)");
+        set_error('tba', "Слишком низко. (< 10 км)");
         return 1;
     } else if(tba_set && tba > 40000) {
-        set_error('tba', "Too high! (> 40km)");
+        set_error('tba', "Слишком высоко. (> 40 км)");
         return 1;
     }
 
     if(!mp_set) {
-        set_error('mp', "Mass required!");
+        set_error('mp', "Необходимо указать массу.");
         return 1;
     } else if(mp < 20) {
-        set_error('mp', "Too small! (< 20g)");
+        set_error('mp', "Слишком легкий груз. (< 20 г)");
         return 1;
     } else if(mp > 20000) {
-        set_error('mp', "Too large! (> 20kg)");
+        set_error('mp', "Слишком тяжелый груз. (> 20 кг)");
         return 1;
     }
 
@@ -330,7 +330,7 @@ function calc_update() {
             var r2 = L * (M + N) + P;
             var r3 = L * (M - N) + P;
 
-            alert("Three possible solutions found: "
+            alert("Найдено 3 решения: "
                 + r1 + ", " + r2 + ", " + r3);
             
             if(r1 > 0) {
@@ -358,7 +358,7 @@ function calc_update() {
     time_to_burst = (burst_altitude / ascent_rate) / 60.0;
 
     if(isNaN(ascent_rate)) {
-        set_error('tba', "Altitude unreachable<br />for this configuration.");
+        set_error('tba', "Высота недостижима<br />для указанной конфигурации.");
         return;
     }
 
