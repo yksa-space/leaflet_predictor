@@ -14,7 +14,7 @@ var map = null;
 // and the page is loaded
 $(document).ready(function () {
   // Initialise the map canvas with parameters (lat, long, zoom-level)
-  initMap(61.6522, 129.3709, 8);
+  initMap(56.6992, 38.8247, 8);
 
   // Populate the launch site list from sites.json
   populateLaunchSite();
